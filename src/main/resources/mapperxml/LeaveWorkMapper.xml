@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.LeaveWorkMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.LeaveWork">
+    <id column="leave_work_id" jdbcType="VARCHAR" property="leaveWorkId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="leave_begin_time" jdbcType="TIMESTAMP" property="leaveBeginTime" />
+    <result column="leave_end_time" jdbcType="TIMESTAMP" property="leaveEndTime" />
+    <result column="leave_day" jdbcType="VARCHAR" property="leaveDay" />
+    <result column="leave_reason" jdbcType="VARCHAR" property="leaveReason" />
+    <result column="leave_status" jdbcType="VARCHAR" property="leaveStatus" />
+    <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="time" jdbcType="DATE" property="time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    leave_work_id, user_id, user_name, dept, leave_begin_time, leave_end_time, leave_day, 
+    leave_reason, leave_status, admin_id, time
+  </sql>
+  <select id="selectByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select * from leave_work
+    <where>
+      leave_status != '0'
+      <if test="userName != null">
+        and user_name like "%"#{userName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="dept != null">
+        and dept like "%"#{dept,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="beginTime != null">
+        and time &gt;= #{beginTime,jdbcType=VARCHAR}
+      </if>
+      <if test="endTime != null">
+        and time &lt;= #{endTime,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ORDER BY leave_begin_time desc;
+  </select>
+  <select id="selectUserLeaveByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select * from leave_work
+    <where>
+      user_id = #{userId,jdbcType=VARCHAR}
+      <if test="beginTime != null">
+        and time &gt;= #{beginTime,jdbcType=VARCHAR}
+      </if>
+      <if test="endTime != null">
+        and time &lt;= #{endTime,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ORDER BY leave_begin_time desc;
+  </select>
+  <update id="updateStatusToYes" parameterType="java.lang.String">
+      update leave_work
+      set leave_status = '1'
+      where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateStatusToNo" parameterType="java.lang.String">
+      update leave_work
+      set leave_status = 'n'
+      where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectNoApply" resultMap="BaseResultMap">
+    select * from leave_work where leave_status = '0' ORDER BY leave_begin_time DESC;
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from leave_work where leave_status != '0' ORDER BY leave_begin_time DESC;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from leave_work
+    where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from leave_work
+    where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.LeaveWork">
+    insert into leave_work (leave_work_id, user_id, user_name,
+      dept, leave_begin_time, leave_end_time,
+      leave_day, leave_reason, leave_status,
+      admin_id, time)
+    values (#{leaveWorkId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+      #{dept,jdbcType=VARCHAR}, #{leaveBeginTime,jdbcType=TIMESTAMP}, #{leaveEndTime,jdbcType=TIMESTAMP},
+      #{leaveDay,jdbcType=VARCHAR}, #{leaveReason,jdbcType=VARCHAR}, #{leaveStatus,jdbcType=VARCHAR},
+      #{adminId,jdbcType=VARCHAR}, #{time,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.LeaveWork">
+    insert into leave_work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="leaveWorkId != null">
+        leave_work_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="leaveBeginTime != null">
+        leave_begin_time,
+      </if>
+      <if test="leaveEndTime != null">
+        leave_end_time,
+      </if>
+      <if test="leaveDay != null">
+        leave_day,
+      </if>
+      <if test="leaveReason != null">
+        leave_reason,
+      </if>
+      <if test="leaveStatus != null">
+        leave_status,
+      </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="leaveWorkId != null">
+        #{leaveWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveBeginTime != null">
+        #{leaveBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveEndTime != null">
+        #{leaveEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveDay != null">
+        #{leaveDay,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveReason != null">
+        #{leaveReason,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveStatus != null">
+        #{leaveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.LeaveWork">
+    update leave_work
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveBeginTime != null">
+        leave_begin_time = #{leaveBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveEndTime != null">
+        leave_end_time = #{leaveEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveDay != null">
+        leave_day = #{leaveDay,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveReason != null">
+        leave_reason = #{leaveReason,jdbcType=VARCHAR},
+      </if>
+      <if test="leaveStatus != null">
+        leave_status = #{leaveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=DATE},
+      </if>
+    </set>
+    where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.LeaveWork">
+    update leave_work
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      leave_begin_time = #{leaveBeginTime,jdbcType=TIMESTAMP},
+      leave_end_time = #{leaveEndTime,jdbcType=TIMESTAMP},
+      leave_day = #{leaveDay,jdbcType=VARCHAR},
+      leave_reason = #{leaveReason,jdbcType=VARCHAR},
+      leave_status = #{leaveStatus,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=VARCHAR},
+      time = #{time,jdbcType=DATE}
+    where leave_work_id = #{leaveWorkId,jdbcType=VARCHAR}
+  </update>
+  <select id="noAuditById" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select * from leave_work
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and leave_status = '0'
+      ORDER BY leave_begin_time desc;
+  </select>
+</mapper>

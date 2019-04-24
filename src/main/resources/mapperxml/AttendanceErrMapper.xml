@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.AttendanceErrMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.AttendanceErr">
+    <id column="attendance_id" jdbcType="VARCHAR" property="attendanceId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="sign_in_time" jdbcType="TIMESTAMP" property="signInTime" />
+    <result column="sign_out_time" jdbcType="TIMESTAMP" property="signOutTime" />
+    <result column="attendance_status" jdbcType="VARCHAR" property="attendanceStatus" />
+    <result column="attendance_type" jdbcType="VARCHAR" property="attendanceType" />
+    <result column="is_overtime" jdbcType="VARCHAR" property="isOvertime" />
+    <result column="overtime_time" jdbcType="DOUBLE" property="overtimeTime" />
+    <result column="attendance_remarks" jdbcType="VARCHAR" property="attendanceRemarks" />
+    <result column="time" jdbcType="DATE" property="time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    attendance_id, user_id, user_name, dept, sign_in_time, sign_out_time, attendance_status, 
+    attendance_type, is_overtime, overtime_time, attendance_remarks, time
+  </sql>
+  <select id="selectErrCount" resultType="java.lang.Integer">
+    select count(*) from attendance_err;
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from attendance_err where attendance_status='0' ORDER BY sign_in_time desc;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_err
+    where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from attendance_err
+    where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.AttendanceErr">
+    insert into attendance_err (attendance_id, user_id, user_name, 
+      dept, sign_in_time, sign_out_time, 
+      attendance_status, attendance_type, is_overtime, 
+      overtime_time, attendance_remarks, time
+      )
+    values (#{attendanceId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{dept,jdbcType=VARCHAR}, #{signInTime,jdbcType=TIMESTAMP}, #{signOutTime,jdbcType=TIMESTAMP}, 
+      #{attendanceStatus,jdbcType=VARCHAR}, #{attendanceType,jdbcType=VARCHAR}, #{isOvertime,jdbcType=VARCHAR}, 
+      #{overtimeTime,jdbcType=DOUBLE}, #{attendanceRemarks,jdbcType=VARCHAR}, #{time,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.AttendanceErr">
+    insert into attendance_err
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        attendance_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="signInTime != null">
+        sign_in_time,
+      </if>
+      <if test="signOutTime != null">
+        sign_out_time,
+      </if>
+      <if test="attendanceStatus != null">
+        attendance_status,
+      </if>
+      <if test="attendanceType != null">
+        attendance_type,
+      </if>
+      <if test="isOvertime != null">
+        is_overtime,
+      </if>
+      <if test="overtimeTime != null">
+        overtime_time,
+      </if>
+      <if test="attendanceRemarks != null">
+        attendance_remarks,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        #{attendanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="signInTime != null">
+        #{signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signOutTime != null">
+        #{signOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceStatus != null">
+        #{attendanceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceType != null">
+        #{attendanceType,jdbcType=VARCHAR},
+      </if>
+      <if test="isOvertime != null">
+        #{isOvertime,jdbcType=VARCHAR},
+      </if>
+      <if test="overtimeTime != null">
+        #{overtimeTime,jdbcType=DOUBLE},
+      </if>
+      <if test="attendanceRemarks != null">
+        #{attendanceRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.AttendanceErr">
+    update attendance_err
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="signInTime != null">
+        sign_in_time = #{signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signOutTime != null">
+        sign_out_time = #{signOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceStatus != null">
+        attendance_status = #{attendanceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceType != null">
+        attendance_type = #{attendanceType,jdbcType=VARCHAR},
+      </if>
+      <if test="isOvertime != null">
+        is_overtime = #{isOvertime,jdbcType=VARCHAR},
+      </if>
+      <if test="overtimeTime != null">
+        overtime_time = #{overtimeTime,jdbcType=DOUBLE},
+      </if>
+      <if test="attendanceRemarks != null">
+        attendance_remarks = #{attendanceRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=DATE},
+      </if>
+    </set>
+    where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.AttendanceErr">
+    update attendance_err
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      sign_in_time = #{signInTime,jdbcType=TIMESTAMP},
+      sign_out_time = #{signOutTime,jdbcType=TIMESTAMP},
+      attendance_status = #{attendanceStatus,jdbcType=VARCHAR},
+      attendance_type = #{attendanceType,jdbcType=VARCHAR},
+      is_overtime = #{isOvertime,jdbcType=VARCHAR},
+      overtime_time = #{overtimeTime,jdbcType=DOUBLE},
+      attendance_remarks = #{attendanceRemarks,jdbcType=VARCHAR},
+      time = #{time,jdbcType=DATE}
+    where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.AdminMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.Admin">
+    <id column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="admin_password" jdbcType="VARCHAR" property="adminPassword" />
+    <result column="admin_permission" jdbcType="VARCHAR" property="adminPermission" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    admin_id, admin_password, admin_permission
+  </sql>
+  <select id="adminPassword" parameterType="java.lang.String" resultType="java.lang.String">
+      select admin_password from admin
+      where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  <select id="countByAdminId" resultType="java.lang.Integer">
+    SELECT
+    count(*)
+    FROM admin
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from admin
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.Admin">
+    insert into admin (admin_id, admin_password, admin_permission
+      )
+    values (#{adminId,jdbcType=VARCHAR}, #{adminPassword,jdbcType=VARCHAR}, #{adminPermission,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="adminPassword != null">
+        admin_password,
+      </if>
+      <if test="adminPermission != null">
+        admin_permission,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPassword != null">
+        #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPermission != null">
+        #{adminPermission,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.Admin">
+    update admin
+    <set>
+      <if test="adminPassword != null">
+        admin_password = #{adminPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPermission != null">
+        admin_permission = #{adminPermission,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.Admin">
+    update admin
+    set admin_password = #{adminPassword,jdbcType=VARCHAR},
+      admin_permission = #{adminPermission,jdbcType=VARCHAR}
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+</mapper>

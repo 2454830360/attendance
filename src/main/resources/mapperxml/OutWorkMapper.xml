@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.OutWorkMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.OutWork">
+    <id column="out_work_id" jdbcType="VARCHAR" property="outWorkId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="out_begin_time" jdbcType="TIMESTAMP" property="outBeginTime" />
+    <result column="out_end_time" jdbcType="TIMESTAMP" property="outEndTime" />
+    <result column="out_day" jdbcType="VARCHAR" property="outDay" />
+    <result column="out_reason" jdbcType="VARCHAR" property="outReason" />
+    <result column="out_status" jdbcType="VARCHAR" property="outStatus" />
+    <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    out_work_id, user_id, user_name, dept, out_begin_time, out_end_time, out_day, out_reason, 
+    out_status, admin_id
+  </sql>
+  <select id="selectByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select * from out_work
+    <where>
+      <if test="userName != null">
+        user_name like "%"#{userName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="dept != null">
+        and dept like "%"#{dept,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="beginTime != null">
+        and out_begin_time &gt;= #{beginTime,jdbcType=VARCHAR}
+      </if>
+      <if test="endTime != null">
+        and out_end_time &lt;= #{endTime,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ORDER BY out_begin_time DESC;
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from out_work ORDER BY out_begin_time DESC;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from out_work
+    where out_work_id = #{outWorkId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from out_work
+    where out_work_id = #{outWorkId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.OutWork">
+    insert into out_work (out_work_id, user_id, user_name,
+      dept, out_begin_time, out_end_time,
+      out_day, out_reason, out_status,
+      admin_id)
+    values (#{outWorkId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+      #{dept,jdbcType=VARCHAR}, #{outBeginTime,jdbcType=TIMESTAMP}, #{outEndTime,jdbcType=TIMESTAMP},
+      #{outDay,jdbcType=VARCHAR}, #{outReason,jdbcType=VARCHAR}, #{outStatus,jdbcType=VARCHAR},
+      #{adminId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.OutWork">
+    insert into out_work
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="outWorkId != null">
+        out_work_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="outBeginTime != null">
+        out_begin_time,
+      </if>
+      <if test="outEndTime != null">
+        out_end_time,
+      </if>
+      <if test="outDay != null">
+        out_day,
+      </if>
+      <if test="outReason != null">
+        out_reason,
+      </if>
+      <if test="outStatus != null">
+        out_status,
+      </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="outWorkId != null">
+        #{outWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="outBeginTime != null">
+        #{outBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outEndTime != null">
+        #{outEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outDay != null">
+        #{outDay,jdbcType=VARCHAR},
+      </if>
+      <if test="outReason != null">
+        #{outReason,jdbcType=VARCHAR},
+      </if>
+      <if test="outStatus != null">
+        #{outStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.OutWork">
+    update out_work
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="outBeginTime != null">
+        out_begin_time = #{outBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outEndTime != null">
+        out_end_time = #{outEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outDay != null">
+        out_day = #{outDay,jdbcType=VARCHAR},
+      </if>
+      <if test="outReason != null">
+        out_reason = #{outReason,jdbcType=VARCHAR},
+      </if>
+      <if test="outStatus != null">
+        out_status = #{outStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where out_work_id = #{outWorkId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.OutWork">
+    update out_work
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      out_begin_time = #{outBeginTime,jdbcType=TIMESTAMP},
+      out_end_time = #{outEndTime,jdbcType=TIMESTAMP},
+      out_day = #{outDay,jdbcType=VARCHAR},
+      out_reason = #{outReason,jdbcType=VARCHAR},
+      out_status = #{outStatus,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=VARCHAR},
+    where out_work_id = #{outWorkId,jdbcType=VARCHAR}
+  </update>
+</mapper>

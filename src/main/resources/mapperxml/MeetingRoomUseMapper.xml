@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.MeetingRoomUseMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.MeetingRoomUse">
+    <id column="use_room_id" jdbcType="VARCHAR" property="useRoomId" />
+    <result column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="room_status" jdbcType="VARCHAR" property="roomStatus" />
+    <result column="room_begin_time" jdbcType="TIMESTAMP" property="roomBeginTime" />
+    <result column="room_end_time" jdbcType="TIMESTAMP" property="roomEndTime" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="room_apply_reason" jdbcType="VARCHAR" property="roomApplyReason" />
+    <result column="time" jdbcType="DATE" property="time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    use_room_id, room_id, room_status, room_begin_time, room_end_time, user_id,user_name, room_apply_reason,
+    time
+  </sql>
+  <select id="selectByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select * from meeting_room_use
+    <where>
+      <if test="userName != null">
+        user_name like "%"#{userName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="roomId != null">
+        and room_id = #{roomId,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ORDER BY room_begin_time DESC;
+  </select>
+  <update id="agreeApply" parameterType="java.lang.String">
+      update meeting_room_use
+      set room_status = '1'
+      where use_room_id = #{useRoomId,jdbcType=VARCHAR};
+  </update>
+  <update id="disAgreeApply" parameterType="java.lang.String">
+      update meeting_room_use
+      set room_status = 'n'
+      where use_room_id = #{useRoomId,jdbcType=VARCHAR};
+  </update>
+  <select id="getNoApply" resultMap="BaseResultMap">
+    select * from meeting_room_use where room_status = '0' ORDER BY room_begin_time DESC;
+  </select>
+  <select id="getApply" resultMap="BaseResultMap">
+    select * from meeting_room_use where room_status != '0' ORDER BY room_begin_time DESC;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from meeting_room_use
+    where use_room_id = #{useRoomId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from meeting_room_use
+    where use_room_id = #{useRoomId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.MeetingRoomUse">
+    insert into meeting_room_use (use_room_id, room_id, room_status, 
+      room_begin_time, room_end_time, user_id, user_name,
+      room_apply_reason, time)
+    values (#{useRoomId,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, #{roomStatus,jdbcType=VARCHAR}, 
+      #{roomBeginTime,jdbcType=TIMESTAMP}, #{roomEndTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR},#{roomApplyReason,jdbcType=VARCHAR}, #{time,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.MeetingRoomUse">
+    insert into meeting_room_use
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="useRoomId != null">
+        use_room_id,
+      </if>
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="roomStatus != null">
+        room_status,
+      </if>
+      <if test="roomBeginTime != null">
+        room_begin_time,
+      </if>
+      <if test="roomEndTime != null">
+        room_end_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="roomApplyReason != null">
+        room_apply_reason,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="useRoomId != null">
+        #{useRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null">
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStatus != null">
+        #{roomStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="roomBeginTime != null">
+        #{roomBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomEndTime != null">
+        #{roomEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomApplyReason != null">
+        #{roomApplyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.MeetingRoomUse">
+    update meeting_room_use
+    <set>
+      <if test="roomId != null">
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStatus != null">
+        room_status = #{roomStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="roomBeginTime != null">
+        room_begin_time = #{roomBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomEndTime != null">
+        room_end_time = #{roomEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomApplyReason != null">
+        room_apply_reason = #{roomApplyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=DATE},
+      </if>
+    </set>
+    where use_room_id = #{useRoomId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.MeetingRoomUse">
+    update meeting_room_use
+    set room_id = #{roomId,jdbcType=VARCHAR},
+      room_status = #{roomStatus,jdbcType=VARCHAR},
+      room_begin_time = #{roomBeginTime,jdbcType=TIMESTAMP},
+      room_end_time = #{roomEndTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      room_apply_reason = #{roomApplyReason,jdbcType=VARCHAR},
+      time = #{time,jdbcType=DATE}
+    where use_room_id = #{useRoomId,jdbcType=VARCHAR}
+  </update>
+</mapper>

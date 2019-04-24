@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.User">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+    <result column="user_age" jdbcType="INTEGER" property="userAge" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="user_create_time" jdbcType="TIMESTAMP" property="userCreateTime" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_image" jdbcType="VARCHAR" property="userImage" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, user_password, user_name, user_sex, user_age, user_phone, dept, user_create_time, 
+    user_address, user_image
+  </sql>
+  <select id="userPassword" parameterType="java.lang.String" resultType="java.lang.String">
+      select user_password from user
+      where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLike" parameterType="com.system.attendance.model.User" resultMap="BaseResultMap">
+    select * from user
+    <where>
+    <if test="userName != null">
+      user_name like "%"#{userName,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="dept != null">
+      and dept like concat(concat("%",#{dept,jdbcType=VARCHAR},"%"))
+    </if>
+    </where>
+    ORDER BY user_create_time DESC;
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from user ORDER BY user_create_time DESC;
+  </select>
+  <select id="countByUserId" resultType="java.lang.Integer">
+    SELECT
+    count(*)
+    FROM user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.User">
+    insert into user (user_id, user_password, user_name, 
+      user_sex, user_age, user_phone, 
+      dept, user_create_time, user_address, 
+      user_image)
+    values (#{userId,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userSex,jdbcType=VARCHAR}, #{userAge,jdbcType=INTEGER}, #{userPhone,jdbcType=VARCHAR},
+      #{dept,jdbcType=VARCHAR}, #{userCreateTime,jdbcType=TIMESTAMP}, #{userAddress,jdbcType=VARCHAR}, 
+      #{userImage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userPassword != null">
+        user_password,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userSex != null">
+        user_sex,
+      </if>
+      <if test="userAge != null">
+        user_age,
+      </if>
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="userCreateTime != null">
+        user_create_time,
+      </if>
+      <if test="userAddress != null">
+        user_address,
+      </if>
+      <if test="userImage != null">
+        user_image,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null">
+        #{userAge,jdbcType=INTEGER},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateTime != null">
+        #{userCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAddress != null">
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userImage != null">
+        #{userImage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.User">
+    update user
+    <set>
+      <if test="userPassword != null">
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        user_sex = #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null">
+        user_age = #{userAge,jdbcType=INTEGER},
+      </if>
+      <if test="userPhone != null">
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateTime != null">
+        user_create_time = #{userCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAddress != null">
+        user_address = #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userImage != null">
+        user_image = #{userImage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.User">
+    update user
+    set user_password = #{userPassword,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=VARCHAR},
+      user_age = #{userAge,jdbcType=INTEGER},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      user_create_time = #{userCreateTime,jdbcType=TIMESTAMP},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_image = #{userImage,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

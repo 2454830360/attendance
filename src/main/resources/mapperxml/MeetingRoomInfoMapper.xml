@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.attendance.mapper.MeetingRoomInfoMapper">
+  <resultMap id="BaseResultMap" type="com.system.attendance.model.MeetingRoomInfo">
+    <id column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="room_name" jdbcType="VARCHAR" property="roomName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    room_id, room_name
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from meeting_room_info;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from meeting_room_info
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from meeting_room_info
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.system.attendance.model.MeetingRoomInfo">
+    insert into meeting_room_info (room_id, room_name)
+    values (#{roomId,jdbcType=VARCHAR}, #{roomName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.attendance.model.MeetingRoomInfo">
+    insert into meeting_room_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="roomName != null">
+        room_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null">
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.attendance.model.MeetingRoomInfo">
+    update meeting_room_info
+    <set>
+      <if test="roomName != null">
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.attendance.model.MeetingRoomInfo">
+    update meeting_room_info
+    set room_name = #{roomName,jdbcType=VARCHAR}
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+</mapper>

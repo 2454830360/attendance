@@ -31,6 +31,16 @@
     from attendance_err
     where attendance_id = #{attendanceId,jdbcType=VARCHAR}
   </select>
+  <select id="userSignOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+      update attendance_err set sign_out_time = #{signOutTime,jdbcType=VARCHAR}
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and time = #{time,jdbcType=VARCHAR}
+  </select>
+  <select id="userSignStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
+      select count(*) from attendance_err
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and time = #{time,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from attendance_err
     where attendance_id = #{attendanceId,jdbcType=VARCHAR}
@@ -48,6 +58,85 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.system.attendance.model.AttendanceErr">
+    insert into attendance_err
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        attendance_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="signInTime != null">
+        sign_in_time,
+      </if>
+      <if test="signOutTime != null">
+        sign_out_time,
+      </if>
+      <if test="attendanceStatus != null">
+        attendance_status,
+      </if>
+      <if test="attendanceType != null">
+        attendance_type,
+      </if>
+      <if test="isOvertime != null">
+        is_overtime,
+      </if>
+      <if test="overtimeTime != null">
+        overtime_time,
+      </if>
+      <if test="attendanceRemarks != null">
+        attendance_remarks,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        #{attendanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="signInTime != null">
+        #{signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signOutTime != null">
+        #{signOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceStatus != null">
+        #{attendanceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceType != null">
+        #{attendanceType,jdbcType=VARCHAR},
+      </if>
+      <if test="isOvertime != null">
+        #{isOvertime,jdbcType=VARCHAR},
+      </if>
+      <if test="overtimeTime != null">
+        #{overtimeTime,jdbcType=DOUBLE},
+      </if>
+      <if test="attendanceRemarks != null">
+        #{attendanceRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertSelectiveRight" parameterType="com.system.attendance.model.Attendance">
     insert into attendance_err
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="attendanceId != null">

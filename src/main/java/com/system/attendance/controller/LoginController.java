@@ -51,18 +51,18 @@ public class LoginController {
                 if(userPassword.equals(passwordInDB)){
                     token = "tokens:"+JWTUtil.getToken();
                     status = "true";
-                    LOG.info("用户登录成功，userId："+userId);
+                    LOG.info("用户登录成功，userId----"+userId);
                 }else{
                     status = "password_error";
-                    LOG.info("密码错误，userId："+userId);
+                    LOG.info("密码错误，userId----"+userId);
                 }
             }else{
                 status = "user_error";
-                LOG.info("用户id不存在！userId："+userId);
+                LOG.info("用户id不存在！userId----"+userId);
             }
         }else{
             status = "null";
-            LOG.info("用户id为空！userId："+userId);
+            LOG.info("用户id为空！userId----"+userId);
         }
         map.put("status",status);
         if(token != null){
@@ -92,19 +92,19 @@ public class LoginController {
                 if(adminPassword.equals(passwordInDB)){
                     status = "true";
                     token = "tokens:"+JWTUtil.getToken();
-                    LOG.info("管理员登录成功，adminId:"+adminId);
+                    LOG.info("管理员登录成功，adminId----"+adminId);
                     LOG.info("管理员登录生成的token----"+token);
                 }else{
-                    LOG.info("密码错误，adminId："+adminId);
+                    LOG.info("密码错误，adminId----"+adminId);
                     status = "password_error";
                 }
             }else{
                 status = "admin_error";
-                LOG.info("管理员id不存在！adminId："+adminId);
+                LOG.info("管理员id不存在！adminId----"+adminId);
             }
         }else{
             status = "null";
-            LOG.info("管理员id为空！adminId："+adminId);
+            LOG.info("管理员id为空！adminId----"+adminId);
         }
         map.put("status",status);
         if(token != null){
@@ -116,7 +116,6 @@ public class LoginController {
     //登出
     @RequestMapping("out")
     public String loginOut(HttpServletRequest request) {
-
 
         return "";
     }

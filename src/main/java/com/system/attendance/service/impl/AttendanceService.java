@@ -82,6 +82,12 @@ public class AttendanceService implements IAttendanceService {
     public int deleteRightErr(String attendId) {
         return attendanceErrMapper.deleteByPrimaryKey(attendId);
     }
+    //用户早退，考勤正表删除
+    @Override
+    public int deleteErrRight(String userId,String time) {
+        return attendanceMapper.deleteByUserIdTime(userId,time);
+    }
+
     //如果管理员审批为同意，则将正常表状态改为1
     @Override
     public int updateStatus(String attendId) {
@@ -106,12 +112,6 @@ public class AttendanceService implements IAttendanceService {
         return attendanceMapper.selectByUserId(userId);
     }
 
-    //新增考勤记录
-    @Override
-    public int addOneAttend(Attendance record) {
-        return attendanceMapper.insertSelective(record);
-    }
-
     //统计考勤id是否存在
     @Override
     public int countAttendById(String attendId) {
@@ -122,5 +122,44 @@ public class AttendanceService implements IAttendanceService {
     @Override
     public int userSayWhyErr(String attendId,String remarks) {
         return attendanceMapper.updateRemark(attendId,remarks);
+    }
+
+    //用户签到状态
+    @Override
+    public int userSignStatus(String userId, String time) {
+        return attendanceMapper.userSignStatus(userId,time);
+    }
+    @Override
+    public int userSignStatusErr(String userId, String time) {
+        return attendanceErrMapper.userSignStatus(userId, time);
+    }
+
+    //用户正常签到
+    @Override
+    public int userSignIn(Attendance record) {
+        return attendanceMapper.insertSelective(record);
+    }
+
+    //用户异常签到
+    @Override
+    public int userSignInERR(Attendance record) {
+        return attendanceErrMapper.insertSelectiveRight(record);
+    }
+
+    //用户正常签退
+    @Override
+    public int userSignOut(String userId, String time,String signOutTime) {
+        return attendanceMapper.userSignOut(userId,time,signOutTime);
+    }
+    //用户正常签退
+    @Override
+    public int userSignOutErr(String userId, String time,String signOutTime) {
+        return attendanceErrMapper.userSignOut(userId,time,signOutTime);
+    }
+
+    //用户早退，考勤状态改为异常
+    @Override
+    public Attendance userYesToNo(String userId, String time) {
+        return attendanceMapper.selectByUserIdTime(userId,time);
     }
 }

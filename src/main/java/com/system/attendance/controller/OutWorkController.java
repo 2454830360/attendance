@@ -105,4 +105,22 @@ public class OutWorkController {
         return outWorkService.getAllOut();
     }
 
+    @RequestMapping("userQuery")
+    public List<OutWork> userQueryOutWork(@RequestBody JSONObject json){
+
+        String userId = null;
+        String outBeginTime = null;
+
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(json.has("out_begin_time")&&!(("").equals(json.getString("out_begin_time")))){
+            outBeginTime = json.getString("out_begin_time");
+        }
+
+
+
+        return null;
+    }
+
 }

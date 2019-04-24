@@ -19,6 +19,21 @@
     attendance_id, user_id, user_name, dept, sign_in_time, sign_out_time, attendance_status, 
     attendance_type, is_overtime, overtime_time, attendance_remarks, time
   </sql>
+  <select id="userEarlyOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+      update attendance set attendance_status = '0'
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and time = #{time,jdbcType=VARCHAR}
+  </select>
+  <select id="userSignOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+      update attendance set sign_out_time = #{signOutTime,jdbcType=VARCHAR}
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and time = #{time,jdbcType=VARCHAR}
+  </select>
+  <select id="userSignStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
+      select count(*) from attendance
+      where user_id = #{userId,jdbcType=VARCHAR}
+      and time = #{time,jdbcType=VARCHAR}
+  </select>
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
       select * from attendance
       where user_id = #{userId,jdbcType=VARCHAR}
@@ -75,9 +90,21 @@
     from attendance
     where attendance_id = #{attendanceId,jdbcType=VARCHAR}
   </select>
+  <select id="selectByUserIdTime" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from attendance
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and time = #{time,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from attendance
     where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByUserIdTime" parameterType="java.lang.String">
+    delete from attendance
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and time = #{time,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.system.attendance.model.Attendance">
     insert into attendance (attendance_id, user_id, user_name,

@@ -1,9 +1,13 @@
 package com.system.attendance.controller;
 
 import com.system.attendance.model.Attendance;
+import com.system.attendance.model.User;
 import com.system.attendance.service.impl.AttendanceService;
+import com.system.attendance.service.impl.UserService;
+import com.system.attendance.utils.JWTUtil;
 import com.system.attendance.utils.TimeUtil;
 import com.system.attendance.utils.UUIDUtil;
+import io.jsonwebtoken.Claims;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +29,8 @@ public class AttendanceController {
 
     @Autowired
     private AttendanceService attendanceService;
+    @Autowired
+    private UserService userService;
 
     //获取所有正常考勤信息
     @RequestMapping("getAll")
@@ -62,53 +69,135 @@ public class AttendanceController {
         maps.put("dept",dept);
         maps.put("beginTime",beginTime);
         maps.put("endTime",endTime);
-        LOG.info("管理员查询考勤信息:"+userName+"-"+dept+"-"+beginTime+"-"+endTime);
+        LOG.info("管理员查询考勤信息----"+userName+"-"+dept+"-"+beginTime+"-"+endTime);
         List<Attendance> attendances = attendanceService.queryByLike(maps);
 
         return attendances;
     }
 
-    //用户签到接口
-    @RequestMapping("signIn")
-    public String userSignIn(@RequestBody JSONObject json){
+    //用户考勤接口
+    @RequestMapping("sign")
+    public String userSignIn(@RequestBody JSONObject json) throws ServletException {
         Attendance attendance = new Attendance();
-        String attendanceId = UUIDUtil.createAttendanceId();
+        String status;
         String userId = null;
-        String token = null;
+        String token;
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
             userId = json.getString("user_id");
         }
         if(json.has("token")&&!(("").equals(json.getString("token")))){
             token = json.getString("token");
+            JWTUtil.checkToken(token);
         }
-        String userName = null;
-        String dept = null;
-        String signInTime = TimeUtil.createTime();
-        String attendanceStatus = null;
-        String attendanceType = null;
-        String time = TimeUtil.todayStringTimeToDB();
+        String userName;
+        String dept;
+        //通过userId获取部门和姓名
+        User users = userService.getOneUserById(userId);
+        userName = users.getUserName();
+        dept = users.getDept();
+        String time = TimeUtil.todayStringTimeToDB();//签到日期
 
-        attendance.setAttendanceId(attendanceId);
-        attendance.setUserId(userId);
-        attendance.setUserName(userName);
-        attendance.setDept(dept);
-        attendance.setSignInTime(signInTime);
-        attendance.setAttendanceStatus(attendanceStatus);
-        attendance.setAttendanceType(attendanceType);
-        attendance.setTime(time);
+        int yes = attendanceService.userSignStatus(userId, time);
+        int not = attendanceService.userSignStatusErr(userId, time);
 
-        int i = attendanceService.addOneAttend(attendance);
-        if(i == 1){
-            LOG.info("用户签到成功");
-            return "true";
+
+        if(userId != null){
+            //判断用户今日是否进行考勤
+            if(yes == 0 && not == 0){
+                //用户签到
+                String attendanceId = UUIDUtil.createAttendanceId();
+                String signInTime = TimeUtil.userSignTime();
+                String attendanceStatus;
+                String attendanceType;
+                if(TimeUtil.getWeek() >=1 && TimeUtil.getWeek() <=5){
+                    //工作日考勤
+                    attendanceType = "工作日考勤";
+                }else{
+                    //周末考勤
+                    attendanceType = "周末考勤";
+                }
+                attendance.setAttendanceId(attendanceId);
+                attendance.setUserId(userId);
+                attendance.setUserName(userName);
+                attendance.setDept(dept);
+                attendance.setSignInTime(signInTime);
+                attendance.setAttendanceType(attendanceType);
+                attendance.setTime(time);
+
+                if(TimeUtil.checkSignInStatus(signInTime)){
+                    //正常签到
+                    attendanceStatus = "1";
+                    attendance.setAttendanceStatus(attendanceStatus);
+                    int j = attendanceService.userSignIn(attendance);
+                    if(j == 1){
+                        LOG.info(userName+"----用户签到成功----");
+                        status = "in_true";
+                    }else{
+                        LOG.info(userName+"----用户签到失败，请重新签到----");
+                        status = "in_false";
+                    }
+                }else{
+                    //异常签到
+                    attendanceStatus = "0";
+                    attendance.setAttendanceStatus(attendanceStatus);
+                    int j = attendanceService.userSignInERR(attendance);
+                    if(j == 1){
+                        LOG.info(userName+"----用户签到成功,但是迟到了----");
+                        status = "in_true";
+                    }else{
+                        LOG.info(userName+"----用户签到失败，请重新签到----");
+                        status = "in_false";
+                    }
+                }
+            }else{
+                //用户已签到，此处进行签退
+                String signOutTime;
+                signOutTime = TimeUtil.userSignTime();
+                if(TimeUtil.checkSignOutStatus(signOutTime) && yes == 1){
+                    //正常签退
+                    int k = attendanceService.userSignOut(userId, time, signOutTime);
+                    if(k == 1){
+                        LOG.info(userName+"----用户签退成功----");
+                        status =  "out_true";
+                    }else{
+                        LOG.info(userName+"----用户签退失败，请重新签退----");
+                        status = "out_false";
+                    }
+                }else{
+                    //早退
+                    int k = 0;
+                    if(yes == 1){
+                        //正常签到的情况早退
+                        Attendance attendances = attendanceService.userYesToNo(userId, time);
+                        attendances.setAttendanceStatus("0");
+                        attendances.setSignOutTime(signOutTime);
+                        k = attendanceService.userSignInERR(attendances);
+                        attendanceService.deleteErrRight(userId, time);
+                    }else{
+                        //异常签到的情况早退
+                        k = attendanceService.userSignOutErr(userId, time, signOutTime);
+                    }
+
+                    if(k == 1){
+                        LOG.info(userName+"----用户早退签退成功----");
+                        status =  "out_true";
+                    }else{
+                        LOG.info(userName+"----用户签退失败，请重新签退----");
+                        status = "out_false";
+                    }
+                }
+            }
+        }else{
+            LOG.info("userId为空----"+userId);
+            return "id_null";
         }
-
-        return "false";
+        return status;
     }
+
 
     //用户查询自己的考勤记录
     @RequestMapping("getById")
-    public List<Attendance> getAttendById(@RequestBody JSONObject json){
+    public List<Attendance> getAttendById(@RequestBody(required = false) JSONObject json){
         String userId = null;
         List<Attendance> attendById;
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
@@ -116,9 +205,10 @@ public class AttendanceController {
         }
         if(userId != null){
             attendById = attendanceService.getAttendById(userId);
+            LOG.info("用户查询自己的考勤记录，user_id----"+userId);
             return attendById;
         }else{
-            LOG.info("user_id为空，user_id："+userId);
+            LOG.info("user_id为空，user_id----"+userId);
             return null;
         }
     }
@@ -143,7 +233,7 @@ public class AttendanceController {
         maps.put("userId",userId);
         maps.put("beginTime",beginTime);
         maps.put("endTime",endTime);
-        LOG.info("用户查询考勤信息:"+userId+"-"+beginTime+"-"+endTime);
+        LOG.info("用户查询考勤信息----"+userId+"-"+beginTime+"-"+endTime);
 
         List<Attendance> uAttendances = attendanceService.userQueryByLike(maps);
 
@@ -167,14 +257,14 @@ public class AttendanceController {
             if(i == 1){
                 int j = attendanceService.userSayWhyErr(attendanceId, attendanceRemark);
                 if(j == 1){
-                    LOG.info("用户提交异常考勤原因成功，"+attendanceId+"-"+attendanceRemark);
+                    LOG.info("用户提交异常考勤原因成功----"+attendanceId+"-"+attendanceRemark);
                     result = "true";
                 }
             }else{
-                LOG.info("考勤id不存在！attendanceId："+attendanceId);
+                LOG.info("考勤id不存在！attendanceId----"+attendanceId);
             }
         }else{
-            LOG.info("attendanceId和attendanceRemark有问题，"+attendanceRemark+"-"+attendanceRemark);
+            LOG.info("attendanceId和attendanceRemark有问题----"+attendanceRemark+"-"+attendanceRemark);
         }
 
         return result;

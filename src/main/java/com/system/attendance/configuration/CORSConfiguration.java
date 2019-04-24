@@ -64,16 +64,16 @@ public class CORSConfiguration {
                 //注意拦截器的顺序
                 //添加拦截器，放行不需要校验token的路由
                 registry.addInterceptor(new JwtInterceptor())
-                        .excludePathPatterns("/qrCode/**","/login/**","/test/**")
+                        .excludePathPatterns("/qrCode/**","/login/**","/test/**","/error/**")
                         .addPathPatterns("/**");
                 //在拦截器打印访问URL
                 registry.addInterceptor(new HandlerInterceptor() {
                     @Override
                     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
                         if(response.getStatus()/100>=4){
-                            LOG.info("访问错误：URL:"+request.getAttribute(WebUtils.ERROR_REQUEST_URI_ATTRIBUTE)+",状态："+response.getStatus());
+                            LOG.info("访问错误:URL----"+request.getAttribute(WebUtils.ERROR_REQUEST_URI_ATTRIBUTE)+",状态："+response.getStatus());
                         }else {
-                            LOG.info("访问成功：URL:"+request.getRequestURI());
+                            LOG.info("访问成功:URL----"+request.getRequestURI());
                         }
                     }
                 });

@@ -23,7 +23,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         //取到token
         String token = authHeader.substring(7);
-        System.out.println("前台token----"+token);
+//        System.out.println("前台token----"+token);
         //验证token
         Claims claims = JWTUtil.checkToken(token);
 

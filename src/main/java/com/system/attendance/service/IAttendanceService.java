@@ -17,12 +17,19 @@ public interface IAttendanceService {
     AttendanceErr getErrAttendById(String attendId);
     int insertErrToRight(AttendanceErr record);
     int deleteRightErr(String attendId);
+    int deleteErrRight(String userId,String time);
     int updateStatus(String attendId);
     List<Attendance> queryByLike(HashMap<String,Object> map);
     List<Attendance> userQueryByLike(HashMap<String,Object> map);
     List<Attendance> getAttendById(String userId);
-    int addOneAttend(Attendance record);
     int countAttendById(String attendId);
     int userSayWhyErr(String attendId,String remarks);
+    int userSignStatus(String userId,String time);
+    int userSignStatusErr(String userId,String time);
+    int userSignIn(Attendance record);
+    int userSignInERR(Attendance record);
+    int userSignOut(String userId,String time,String signOutTime);
+    int userSignOutErr(String userId,String time,String signOutTime);
+    Attendance userYesToNo(String userId,String time);
 
 }

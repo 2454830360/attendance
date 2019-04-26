@@ -15,7 +15,7 @@ public interface AttendanceErrMapper {
     List<AttendanceErr> selectAll();
 
     //异常签退
-    int userSignOut(String userId,String time,String signOutTime);
+    int userSignOut(@Param("userId") String userId,@Param("time") String time,@Param("signOutTime") String signOutTime);
 
     //查看用户是否签到
     int userSignStatus(@Param("userId")String userId, @Param("time") String time);

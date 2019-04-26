@@ -32,7 +32,7 @@ public class LoginController {
 
     //用户登录验证
     @RequestMapping("user")
-    public Map<String,String> userLoginVerify(@RequestBody JSONObject json,HttpServletRequest request){
+    public Map<String,String> userLoginVerify(@RequestBody JSONObject json){
         Map<String,String> map = new HashMap<>();
         String status;
         String token = null;
@@ -73,7 +73,7 @@ public class LoginController {
 
     //管理员登录验证
     @RequestMapping("admin")
-    public Map<String,String> adminLoginVerify(@RequestBody JSONObject json, HttpServletRequest request){
+    public Map<String,String> adminLoginVerify(@RequestBody JSONObject json){
         Map<String,String> map = new HashMap<>();
         String status;
         String token = null;

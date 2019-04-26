@@ -19,16 +19,16 @@
     attendance_id, user_id, user_name, dept, sign_in_time, sign_out_time, attendance_status, 
     attendance_type, is_overtime, overtime_time, attendance_remarks, time
   </sql>
-  <select id="userEarlyOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+  <update id="userEarlyOut" parameterType="java.lang.String">
       update attendance set attendance_status = '0'
       where user_id = #{userId,jdbcType=VARCHAR}
       and time = #{time,jdbcType=VARCHAR}
-  </select>
-  <select id="userSignOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+  </update>
+  <update id="userSignOut" parameterType="java.lang.String">
       update attendance set sign_out_time = #{signOutTime,jdbcType=VARCHAR}
       where user_id = #{userId,jdbcType=VARCHAR}
       and time = #{time,jdbcType=VARCHAR}
-  </select>
+  </update>
   <select id="userSignStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
       select count(*) from attendance
       where user_id = #{userId,jdbcType=VARCHAR}
@@ -337,7 +337,9 @@
       where attendance_id = #{attendanceId,jdbcType=VARCHAR};
   </update>
   <update id="updateRemark" parameterType="java.lang.String">
-      update attendance set attendance_remarks = #{attendanceRemarks,jdbcType=VARCHAR}
+      update attendance set
+      attendance_status = '0',
+      attendance_remarks = #{attendanceRemarks,jdbcType=VARCHAR}
       where attendance_id = #{attendanceId,jdbcType=VARCHAR};
   </update>
 </mapper>

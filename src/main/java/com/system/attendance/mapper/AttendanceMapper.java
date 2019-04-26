@@ -11,10 +11,10 @@ import java.util.List;
 @Mapper
 public interface AttendanceMapper {
 
-    int userEarlyOut(String userId,String time);
+    int userEarlyOut(@Param("userId")String userId,@Param("time") String time);
 
     //签退
-    int userSignOut(String userId,String time,String signOutTime);
+    int userSignOut(@Param("userId") String userId,@Param("time") String time,@Param("signOutTime") String signOutTime);
 
     //查询用户是否签到
     int userSignStatus(@Param("userId")String userId,@Param("time") String time);

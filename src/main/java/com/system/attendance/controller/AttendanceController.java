@@ -81,7 +81,7 @@ public class AttendanceController {
         Attendance attendance = new Attendance();
         String status;
         String userId = null;
-        String token;
+        String token = null;
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
             userId = json.getString("user_id");
         }
@@ -130,7 +130,7 @@ public class AttendanceController {
                     attendance.setAttendanceStatus(attendanceStatus);
                     int j = attendanceService.userSignIn(attendance);
                     if(j == 1){
-                        LOG.info(userName+"----用户签到成功----");
+                        LOG.info(userName+"----用户签到成功----"+signInTime);
                         status = "in_true";
                     }else{
                         LOG.info(userName+"----用户签到失败，请重新签到----");
@@ -138,11 +138,11 @@ public class AttendanceController {
                     }
                 }else{
                     //异常签到
-                    attendanceStatus = "0";
+                    attendanceStatus = "";
                     attendance.setAttendanceStatus(attendanceStatus);
                     int j = attendanceService.userSignInERR(attendance);
                     if(j == 1){
-                        LOG.info(userName+"----用户签到成功,但是迟到了----");
+                        LOG.info(userName+"----用户签到成功,但是迟到了----"+signInTime);
                         status = "in_true";
                     }else{
                         LOG.info(userName+"----用户签到失败，请重新签到----");
@@ -157,33 +157,32 @@ public class AttendanceController {
                     //正常签退
                     int k = attendanceService.userSignOut(userId, time, signOutTime);
                     if(k == 1){
-                        LOG.info(userName+"----用户签退成功----");
+                        LOG.info(userName+"----用户签退成功----"+signOutTime);
                         status =  "out_true";
                     }else{
                         LOG.info(userName+"----用户签退失败，请重新签退----");
                         status = "out_false";
                     }
                 }else{
-                    //早退
-                    int k = 0;
+                    //签到为迟到或早退
+                    int k;
                     if(yes == 1){
                         //正常签到的情况早退
                         Attendance attendances = attendanceService.userYesToNo(userId, time);
-                        attendances.setAttendanceStatus("0");
+                        attendances.setAttendanceStatus(null);
                         attendances.setSignOutTime(signOutTime);
                         k = attendanceService.userSignInERR(attendances);
                         attendanceService.deleteErrRight(userId, time);
                     }else{
-                        //异常签到的情况早退
+                        //异常签到的情况签退
                         k = attendanceService.userSignOutErr(userId, time, signOutTime);
                     }
-
                     if(k == 1){
-                        LOG.info(userName+"----用户早退签退成功----");
                         status =  "out_true";
+                        LOG.info(userName+"----用户签退成功----"+signOutTime);
                     }else{
-                        LOG.info(userName+"----用户签退失败，请重新签退----");
                         status = "out_false";
+                        LOG.info(userName+"----用户签退失败，请重新签退----");
                     }
                 }
             }

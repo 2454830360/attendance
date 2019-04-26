@@ -31,11 +31,11 @@
     from attendance_err
     where attendance_id = #{attendanceId,jdbcType=VARCHAR}
   </select>
-  <select id="userSignOut" parameterType="java.lang.String" resultType="java.lang.Integer">
+  <update id="userSignOut" parameterType="java.lang.String">
       update attendance_err set sign_out_time = #{signOutTime,jdbcType=VARCHAR}
       where user_id = #{userId,jdbcType=VARCHAR}
       and time = #{time,jdbcType=VARCHAR}
-  </select>
+  </update>
   <select id="userSignStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
       select count(*) from attendance_err
       where user_id = #{userId,jdbcType=VARCHAR}

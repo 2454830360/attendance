@@ -41,7 +41,7 @@ public class JWTUtil {
                             .setSigningKey(base64EncodedSecretKey)
                             .parseClaimsJws(token)
                             .getBody();
-            System.out.println("jwt body----"+claims);
+//            System.out.println("jwt body----"+claims);
             return claims;
         }catch (ExpiredJwtException e1){
             LOG.info("登录信息过期，请重新登录");

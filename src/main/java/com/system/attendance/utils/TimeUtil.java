@@ -62,8 +62,9 @@ public class TimeUtil {
         Date endTime = null;
         Date now = null;
         try {
+            //签到时间
             beginTime = sdf.parse("00:00:00");
-            endTime = sdf.parse("09:00:00");
+            endTime = sdf.parse("23:00:00");
             now = sdf.parse(signInTime);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -95,6 +96,7 @@ public class TimeUtil {
         Date endTime = null;
         Date now = null;
         try {
+            //签退时间
             beginTime = sdf.parse("18:00:00");
             endTime = sdf.parse("23:59:59");
             now = sdf.parse(signOutTime);

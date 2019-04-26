@@ -151,7 +151,7 @@ public class AttendanceService implements IAttendanceService {
     public int userSignOut(String userId, String time,String signOutTime) {
         return attendanceMapper.userSignOut(userId,time,signOutTime);
     }
-    //用户正常签退
+    //用户异常表签退
     @Override
     public int userSignOutErr(String userId, String time,String signOutTime) {
         return attendanceErrMapper.userSignOut(userId,time,signOutTime);

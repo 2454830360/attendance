@@ -37,4 +37,10 @@ public class OutWorkService implements IOutWorkService {
     public int addOneOut(OutWork outWork) {
         return outWorkMapper.insertSelective(outWork);
     }
+
+    //用户查询自己的出差记录
+    @Override
+    public List<OutWork> queryByUserId(String userId) {
+        return outWorkMapper.selectById(userId);
+    }
 }

@@ -31,5 +31,6 @@ public interface IAttendanceService {
     int userSignOut(String userId,String time,String signOutTime);
     int userSignOutErr(String userId,String time,String signOutTime);
     Attendance userYesToNo(String userId,String time);
+    List<Attendance> getAttendByDept(String dept,String time);
 
 }

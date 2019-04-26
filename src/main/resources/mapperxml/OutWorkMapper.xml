@@ -38,6 +38,11 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select * from out_work ORDER BY out_begin_time DESC;
   </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from out_work
+    where user_id = #{userId,jdbcType=VARCHAR}
+    ORDER BY out_begin_time DESC;
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

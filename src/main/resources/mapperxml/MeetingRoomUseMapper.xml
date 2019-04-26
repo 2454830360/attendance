@@ -28,6 +28,16 @@
     </where>
     ORDER BY room_begin_time DESC;
   </select>
+  <select id="userUseRoom" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from meeting_room_use
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and time &gt;= #{time,jdbcType=VARCHAR} ORDER BY room_begin_time ASC;
+  </select>
+  <select id="roomUserById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from meeting_room_use
+    where room_id = #{roomId,jdbcType=VARCHAR}
+    and time &gt;= #{time,jdbcType=VARCHAR} ORDER BY room_begin_time ASC;
+  </select>
   <update id="agreeApply" parameterType="java.lang.String">
       update meeting_room_use
       set room_status = '1'

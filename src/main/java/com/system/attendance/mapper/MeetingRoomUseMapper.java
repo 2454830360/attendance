@@ -2,12 +2,19 @@ package com.system.attendance.mapper;
 
 import com.system.attendance.model.MeetingRoomUse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
 
 @Mapper
 public interface MeetingRoomUseMapper {
+
+    //通过user_id查会议室使用记录
+    List<MeetingRoomUse> userUseRoom(@Param("userId") String userId,@Param("time") String time);
+
+    //通过room_id查会议室使用记录
+    List<MeetingRoomUse> roomUserById(@Param("roomId") String roomId,@Param("time") String time);
 
     //模糊查询
     List<MeetingRoomUse> selectByLike(HashMap<String,Object> map);

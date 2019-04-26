@@ -16,4 +16,8 @@ public interface IMeetingRoomService {
     int addOneRoom(MeetingRoomInfo meetInfo);
     int deleteRoom(String roomId);
     List<MeetingRoomUse> queryByLike(HashMap<String,Object> map);
+    int checkRoomId(String roomId);
+    int addRoomUse(MeetingRoomUse meetingRoomUse);
+    List<MeetingRoomUse> userUseRoom(String userId,String time);
+    List<MeetingRoomUse> queryRoomUserByRoomId(String roomId,String time);
 }

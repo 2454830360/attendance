@@ -162,4 +162,10 @@ public class AttendanceService implements IAttendanceService {
     public Attendance userYesToNo(String userId, String time) {
         return attendanceMapper.selectByUserIdTime(userId,time);
     }
+
+    //获取团队成员考勤情况
+    @Override
+    public List<Attendance> getAttendByDept(String dept,String time) {
+        return attendanceMapper.queryTeamAttend(dept,time);
+    }
 }

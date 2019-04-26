@@ -13,6 +13,8 @@ public interface OutWorkMapper {
 
     List<OutWork> selectAll();
 
+    List<OutWork> selectById(String userId);
+
     int deleteByPrimaryKey(String outWorkId);
 
     int insert(OutWork record);

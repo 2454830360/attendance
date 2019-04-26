@@ -56,6 +56,15 @@ public class UUIDUtil {
         String leaveId = sb.append(getTime()).append(getUUId()).toString();
         return leaveId;
     }
+    /**
+     * 会议室使用id：RU+时间+8位唯一数
+     * @return
+     */
+    public static String createRoomUseId(){
+        StringBuilder sb = new StringBuilder("RU");
+        String leaveId = sb.append(getTime()).append(getUUId()).toString();
+        return leaveId;
+    }
 
 
     /**

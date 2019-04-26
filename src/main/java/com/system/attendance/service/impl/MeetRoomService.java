@@ -70,4 +70,26 @@ public class MeetRoomService implements IMeetingRoomService {
         return meetingRoomUseMapper.selectByLike(map);
     }
 
+    //检查是否有该会议室
+    @Override
+    public int checkRoomId(String roomId) {
+        return meetingRoomInfoMapper.checkRoomById(roomId);
+    }
+    //新增会议室使用记录
+    @Override
+    public int addRoomUse(MeetingRoomUse meetingRoomUse) {
+        return meetingRoomUseMapper.insertSelective(meetingRoomUse);
+    }
+
+    //用户查询自己申请的会议室情况
+    @Override
+    public List<MeetingRoomUse> userUseRoom(String userId, String time) {
+        return meetingRoomUseMapper.userUseRoom(userId,time);
+    }
+
+    //查询会议室使用情况
+    @Override
+    public List<MeetingRoomUse> queryRoomUserByRoomId(String roomId, String time) {
+        return meetingRoomUseMapper.roomUserById(roomId,time);
+    }
 }

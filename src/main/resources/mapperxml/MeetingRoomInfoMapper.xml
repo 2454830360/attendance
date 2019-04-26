@@ -8,6 +8,10 @@
   <sql id="Base_Column_List">
     room_id, room_name
   </sql>
+  <select id="checkRoomById" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select count(*) from meeting_room_info
+    where room_id = #{roomId,jdbcType=VARCHAR}
+  </select>
   <select id="selectAll" resultMap="BaseResultMap">
       select * from meeting_room_info;
   </select>

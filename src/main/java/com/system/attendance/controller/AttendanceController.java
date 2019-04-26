@@ -87,6 +87,7 @@ public class AttendanceController {
         }
         if(json.has("token")&&!(("").equals(json.getString("token")))){
             token = json.getString("token");
+            //检查token
             JWTUtil.checkToken(token);
         }
         String userName;
@@ -193,7 +194,6 @@ public class AttendanceController {
         return status;
     }
 
-
     //用户查询自己的考勤记录
     @RequestMapping("getById")
     public List<Attendance> getAttendById(@RequestBody(required = false) JSONObject json){
@@ -265,8 +265,27 @@ public class AttendanceController {
         }else{
             LOG.info("attendanceId和attendanceRemark有问题----"+attendanceRemark+"-"+attendanceRemark);
         }
-
         return result;
+    }
+
+    //查看团队成员到岗情况
+    @RequestMapping("team")
+    public List<Attendance> queryTeamAttend(@RequestBody JSONObject json){
+        String userId = null;
+        String dept;
+        String time = TimeUtil.todayStringTime();
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(userId!=null){
+            User users = userService.getOneUserById(userId);
+            dept = users.getDept();
+            List<Attendance> attendByDept = attendanceService.getAttendByDept(dept, time);
+            return attendByDept;
+        }else{
+            LOG.info("user_id为空");
+            return null;
+        }
     }
 
 

@@ -1,7 +1,9 @@
 package com.system.attendance.controller;
 
 import com.system.attendance.model.OutWork;
+import com.system.attendance.model.User;
 import com.system.attendance.service.impl.OutWorkService;
+import com.system.attendance.service.impl.UserService;
 import com.system.attendance.utils.UUIDUtil;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,6 +24,8 @@ public class OutWorkController {
 
     @Autowired
     private OutWorkService outWorkService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有出差信息
@@ -71,6 +75,8 @@ public class OutWorkController {
         OutWork outWork = new OutWork();
         String outWorkId = UUIDUtil.createOutWorkId();
         String userId = null;
+        String userName = null;
+        String dept = null;
         String outBeginTime = null;
         String outEndTime = null;
         String outDay = null;
@@ -89,9 +95,16 @@ public class OutWorkController {
         if(json.has("out_reason")&&!(("").equals(json.getString("out_reason")))){
             outReason = json.getString("out_reason");
         }
+        if(userId!=null){
+            User userById = userService.getOneUserById(userId);
+            userName = userById.getUserName();
+            dept = userById.getDept();
+        }
 
         outWork.setOutWorkId(outWorkId);
         outWork.setUserId(userId);
+        outWork.setUserName(userName);
+        outWork.setDept(dept);
         outWork.setOutBeginTime(outBeginTime);
         outWork.setOutEndTime(outEndTime);
         outWork.setOutReason(outReason);
@@ -105,22 +118,22 @@ public class OutWorkController {
         return outWorkService.getAllOut();
     }
 
+
+    //用户查询自己出差记录
     @RequestMapping("userQuery")
     public List<OutWork> userQueryOutWork(@RequestBody JSONObject json){
-
         String userId = null;
-        String outBeginTime = null;
 
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
             userId = json.getString("user_id");
         }
-        if(json.has("out_begin_time")&&!(("").equals(json.getString("out_begin_time")))){
-            outBeginTime = json.getString("out_begin_time");
+        if(userId != null){
+            List<OutWork> outWorks = outWorkService.queryByUserId(userId);
+            return outWorks;
+        }else{
+            LOG.info("用户查询出差记录出错！userId为空");
+            return null;
         }
-
-
-
-        return null;
     }
 
 }

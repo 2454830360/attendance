@@ -8,6 +8,7 @@ import java.util.List;
 public interface IOutWorkService {
 
     List<OutWork> getAllOut();
+    List<OutWork> queryByUserId(String userId);
     List<OutWork> queryByLike(HashMap<String,Object> map);
     int addOneOut(OutWork outWork);
 }

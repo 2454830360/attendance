@@ -54,9 +54,10 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose() throws IOException {
         //设置只能有一个用户连接，后续增加用户再说吧
         if(getOnlineCount() == 1){
+            this.session.close();
             threads.stop();
             webSocketSet.remove(this);  //从set中删除
             subOnlineCount();           //在线数减1

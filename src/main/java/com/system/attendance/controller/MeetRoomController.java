@@ -2,7 +2,11 @@ package com.system.attendance.controller;
 
 import com.system.attendance.model.MeetingRoomInfo;
 import com.system.attendance.model.MeetingRoomUse;
+import com.system.attendance.model.User;
 import com.system.attendance.service.impl.MeetRoomService;
+import com.system.attendance.service.impl.UserService;
+import com.system.attendance.utils.TimeUtil;
+import com.system.attendance.utils.UUIDUtil;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,8 @@ public class MeetRoomController {
 
     @Autowired
     private MeetRoomService meetRoomService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有会议室信息
@@ -109,5 +115,104 @@ public class MeetRoomController {
         return meetingRoomUses;
     }
 
+    //用户申请使用会议室
+    @RequestMapping("userApply")
+    public String userApplyRoom(@RequestBody JSONObject json){
+       MeetingRoomUse roomUse = new MeetingRoomUse();
+       String useRoomId = UUIDUtil.createRoomUseId();
+       String roomId = null;
+       String roomStatus = "0";
+       String userId = null;
+       String userName;
+       String roomBeginTime = null;
+       String roomEndTime = null;
+       String roomApplyReason = null;
+       String time = TimeUtil.todayStringTimeToDB();
+
+        if(json.has("room_id")&&!(("").equals(json.getString("room_id")))){
+            roomId = json.getString("room_id");
+        }
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(json.has("room_begin_time")&&!(("").equals(json.getString("room_begin_time")))){
+            roomBeginTime = json.getString("room_begin_time");
+        }
+        if(json.has("room_end_time")&&!(("").equals(json.getString("room_end_time")))){
+            roomEndTime = json.getString("room_end_time");
+        }
+        if(json.has("room_apply_reason")&&!(("").equals(json.getString("room_apply_reason")))){
+            roomApplyReason = json.getString("room_apply_reason");
+        }
+
+        if(userId != null){
+            User userById = userService.getOneUserById(userId);
+            userName = userById.getUserName();
+        }else {
+            LOG.info("user_id为空");
+            return "false";
+        }
+        if(roomId != null){
+            int i = meetRoomService.checkRoomId(roomId);
+            if(i != 1){
+                return "false";
+            }
+        }else {
+            LOG.info("roomId为空");
+            return "false";
+        }
+
+        roomUse.setUseRoomId(useRoomId);
+        roomUse.setRoomId(roomId);
+        roomUse.setRoomStatus(roomStatus);
+        roomUse.setUserId(userId);
+        roomUse.setUserName(userName);
+        roomUse.setRoomBeginTime(roomBeginTime);
+        roomUse.setRoomEndTime(roomEndTime);
+        roomUse.setRoomApplyReason(roomApplyReason);
+        roomUse.setTime(time);
+
+        int j = meetRoomService.addRoomUse(roomUse);
+        if(j != 1){
+            LOG.info("新增会议室申请失败");
+            return "false";
+        }
+        return "true";
+    }
+
+    //用户通过id查看自己申请会议室情况
+    @RequestMapping("userUse")
+    public List<MeetingRoomUse> queryUserUseRoom(@RequestBody JSONObject json){
+        String userId = null;
+        String time = TimeUtil.todayStringTimeToDB();
+
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(userId != null){
+            List<MeetingRoomUse> meetingRoomUses = meetRoomService.userUseRoom(userId, time);
+            return meetingRoomUses;
+        }else {
+            LOG.info("user_id为空");
+            return null;
+        }
+    }
+
+    @RequestMapping("roomUse")
+    public List<MeetingRoomUse> queryRoomIdUseStatus(@RequestBody JSONObject json){
+        String roomId = null;
+        String time = TimeUtil.todayStringTime();
+        if(json.has("room_id")&&!(("").equals(json.getString("room_id")))){
+            roomId = json.getString("room_id");
+        }
+
+        if(roomId!=null){
+            List<MeetingRoomUse> meetingRoomUses = meetRoomService.queryRoomUserByRoomId(roomId, time);
+            return  meetingRoomUses;
+        }else{
+            LOG.info("room_id为空");
+            return null;
+        }
+    }
 
 }

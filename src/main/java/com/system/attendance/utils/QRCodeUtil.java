@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

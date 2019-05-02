@@ -1,7 +1,9 @@
 package com.system.attendance.controller;
 
 import com.system.attendance.model.LeaveWork;
+import com.system.attendance.model.User;
 import com.system.attendance.service.impl.LeaveWorkService;
+import com.system.attendance.service.impl.UserService;
 import com.system.attendance.utils.TimeUtil;
 import com.system.attendance.utils.UUIDUtil;
 import net.sf.json.JSONObject;
@@ -23,6 +25,8 @@ public class LeaveWorkController {
 
     @Autowired
     private LeaveWorkService leaveWorkService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有请假信息
@@ -91,6 +95,13 @@ public class LeaveWorkController {
         if(json.has("leave_reason")&&!(("").equals(json.getString("leave_reason")))){
             leaveReason = json.getString("leave_reason");
         }
+        if(userId!=null){
+            User users = userService.getOneUserById(userId);
+            userName = users.getUserName();
+            dept = users.getDept();
+        }else{
+            LOG.info("user_id为空");
+        }
 
         leaveWork.setLeaveWorkId(leaveWorkId);
         leaveWork.setUserId(userId);
@@ -100,6 +111,7 @@ public class LeaveWorkController {
         leaveWork.setLeaveEndTime(leaveEndTime);
         leaveWork.setLeaveDay(leaveDay);
         leaveWork.setLeaveReason(leaveReason);
+        leaveWork.setLeaveStatus("0");
         leaveWork.setTime(time);
 
         int i = leaveWorkService.addOneLeave(leaveWork);
@@ -124,7 +136,7 @@ public class LeaveWorkController {
         return leaveWorks;
     }
 
-    //用户根据时间查询请假信息
+    //用户根据id、时间查询请假信息
     @RequestMapping("userQuery")
     public List<LeaveWork> userQueryByLike(@RequestBody JSONObject json){
         HashMap<String,Object> maps = new HashMap<String,Object>();
@@ -141,7 +153,7 @@ public class LeaveWorkController {
         if(json.has("endTime")&&!(("").equals(json.getString("endTime")))){
             endTime = json.getString("endTime");
         }
-        maps.put("userName",userId);
+        maps.put("userId",userId);
         maps.put("beginTime",beginTime);
         maps.put("endTime",endTime);
         LOG.info("用户查询请假信息:"+userId+"-"+beginTime+"-"+endTime);

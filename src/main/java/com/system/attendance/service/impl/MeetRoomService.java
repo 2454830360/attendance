@@ -83,13 +83,25 @@ public class MeetRoomService implements IMeetingRoomService {
 
     //用户查询自己申请的会议室情况
     @Override
-    public List<MeetingRoomUse> userUseRoom(String userId, String time) {
-        return meetingRoomUseMapper.userUseRoom(userId,time);
+    public List<MeetingRoomUse> userUseRoom(String userId) {
+        return meetingRoomUseMapper.userUseRoom(userId);
     }
 
     //查询会议室使用情况
     @Override
     public List<MeetingRoomUse> queryRoomUserByRoomId(String roomId, String time) {
         return meetingRoomUseMapper.roomUserById(roomId,time);
+    }
+
+    //查看会议室是否已经被申请
+    @Override
+    public int checkRoomUseStatus(String roomId,String time,String roomBeginTime,String roomEndTime) {
+        return meetingRoomUseMapper.checkRoomStatus(roomId, time, roomBeginTime, roomEndTime);
+    }
+
+    //获取会议室id
+    @Override
+    public List<MeetingRoomInfo> getRoomId() {
+        return meetingRoomInfoMapper.selectAll();
     }
 }

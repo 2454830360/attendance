@@ -92,7 +92,7 @@ public class MeetRoomController {
         return meetRoomService.getRoomUse();
     }
 
-    //通过使用者、会议室编号、时间筛选会议室
+    //通过使用者姓名、会议室编号查询会议室使用记录
     @RequestMapping("query")
     public List<MeetingRoomUse> queryByLike(@RequestBody JSONObject json){
         HashMap<String,Object> maps = new HashMap<String,Object>();
@@ -161,36 +161,42 @@ public class MeetRoomController {
             LOG.info("roomId为空");
             return "false";
         }
+        int i = meetRoomService.checkRoomUseStatus(roomId, time, roomBeginTime, roomEndTime);
+        if(i == 0){
+            roomUse.setUseRoomId(useRoomId);
+            roomUse.setRoomId(roomId);
+            roomUse.setRoomStatus(roomStatus);
+            roomUse.setUserId(userId);
+            roomUse.setUserName(userName);
+            roomUse.setRoomBeginTime(roomBeginTime);
+            roomUse.setRoomEndTime(roomEndTime);
+            roomUse.setRoomApplyReason(roomApplyReason);
+            roomUse.setTime(time);
 
-        roomUse.setUseRoomId(useRoomId);
-        roomUse.setRoomId(roomId);
-        roomUse.setRoomStatus(roomStatus);
-        roomUse.setUserId(userId);
-        roomUse.setUserName(userName);
-        roomUse.setRoomBeginTime(roomBeginTime);
-        roomUse.setRoomEndTime(roomEndTime);
-        roomUse.setRoomApplyReason(roomApplyReason);
-        roomUse.setTime(time);
-
-        int j = meetRoomService.addRoomUse(roomUse);
-        if(j != 1){
-            LOG.info("新增会议室申请失败");
-            return "false";
+            int j = meetRoomService.addRoomUse(roomUse);
+            if(j != 1){
+                LOG.info("会议室申请失败");
+                return "false";
+            }
+        }else{
+            LOG.info("会议室该时间段已被申请，请重新选择");
+            return "already_use";
         }
+        LOG.info("会议室申请成功----"+userName);
         return "true";
     }
 
-    //用户通过id查看自己申请会议室情况
+    //通过用户id查看申请会议室情况
     @RequestMapping("userUse")
     public List<MeetingRoomUse> queryUserUseRoom(@RequestBody JSONObject json){
         String userId = null;
-        String time = TimeUtil.todayStringTimeToDB();
+//        String time = TimeUtil.todayStringTimeToDB();
 
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
             userId = json.getString("user_id");
         }
         if(userId != null){
-            List<MeetingRoomUse> meetingRoomUses = meetRoomService.userUseRoom(userId, time);
+            List<MeetingRoomUse> meetingRoomUses = meetRoomService.userUseRoom(userId);
             return meetingRoomUses;
         }else {
             LOG.info("user_id为空");
@@ -198,6 +204,7 @@ public class MeetRoomController {
         }
     }
 
+    //用户通过会议室id查询会议室申请记录
     @RequestMapping("roomUse")
     public List<MeetingRoomUse> queryRoomIdUseStatus(@RequestBody JSONObject json){
         String roomId = null;
@@ -213,6 +220,12 @@ public class MeetRoomController {
             LOG.info("room_id为空");
             return null;
         }
+    }
+
+    //获取房间id信息
+    @RequestMapping("getId")
+    public List<MeetingRoomInfo> getRoomId(){
+        return meetRoomService.getRoomId();
     }
 
 }

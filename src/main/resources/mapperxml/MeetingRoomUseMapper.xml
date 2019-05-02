@@ -16,6 +16,13 @@
     use_room_id, room_id, room_status, room_begin_time, room_end_time, user_id,user_name, room_apply_reason,
     time
   </sql>
+  <select id="checkRoomStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select count(*) from meeting_room_use
+     where room_id = #{roomId,jdbcType=VARCHAR}
+     and time = #{time,jdbcType=VARCHAR}
+     and (room_begin_time BETWEEN #{roomBeginTime,jdbcType=VARCHAR} and #{roomEndTime,jdbcType=VARCHAR}
+     or room_end_time BETWEEN #{roomBeginTime,jdbcType=VARCHAR} and #{roomEndTime,jdbcType=VARCHAR});
+  </select>
   <select id="selectByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
     select * from meeting_room_use
     <where>
@@ -31,12 +38,12 @@
   <select id="userUseRoom" parameterType="java.lang.String" resultMap="BaseResultMap">
     select * from meeting_room_use
     where user_id = #{userId,jdbcType=VARCHAR}
-    and time &gt;= #{time,jdbcType=VARCHAR} ORDER BY room_begin_time ASC;
+    ORDER BY time DESC,room_begin_time ASC;
   </select>
   <select id="roomUserById" resultMap="BaseResultMap" parameterType="java.lang.String">
     select * from meeting_room_use
     where room_id = #{roomId,jdbcType=VARCHAR}
-    and time &gt;= #{time,jdbcType=VARCHAR} ORDER BY room_begin_time ASC;
+    and time &gt;= #{time,jdbcType=VARCHAR} ORDER BY time DESC,room_begin_time ASC;
   </select>
   <update id="agreeApply" parameterType="java.lang.String">
       update meeting_room_use

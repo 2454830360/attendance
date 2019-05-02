@@ -43,4 +43,10 @@ public class OutWorkService implements IOutWorkService {
     public List<OutWork> queryByUserId(String userId) {
         return outWorkMapper.selectById(userId);
     }
+
+    //用户查询正在出差中的任务
+    @Override
+    public List<OutWork> queryOutingByUserId(String userId,String time) {
+        return outWorkMapper.selectIngById(userId, time);
+    }
 }

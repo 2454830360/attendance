@@ -10,8 +10,11 @@ import java.util.List;
 @Mapper
 public interface MeetingRoomUseMapper {
 
+    //验证用户申请的会议室是否被申请
+    int checkRoomStatus(@Param("roomId") String roomId,@Param("time") String time,@Param("roomBeginTime") String roomBeginTime,@Param("roomEndTime") String roomEndTime);
+
     //通过user_id查会议室使用记录
-    List<MeetingRoomUse> userUseRoom(@Param("userId") String userId,@Param("time") String time);
+    List<MeetingRoomUse> userUseRoom(@Param("userId") String userId);
 
     //通过room_id查会议室使用记录
     List<MeetingRoomUse> roomUserById(@Param("roomId") String roomId,@Param("time") String time);

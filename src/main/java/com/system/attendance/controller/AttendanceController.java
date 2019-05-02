@@ -1,6 +1,7 @@
 package com.system.attendance.controller;
 
 import com.system.attendance.model.Attendance;
+import com.system.attendance.model.AttendanceErr;
 import com.system.attendance.model.User;
 import com.system.attendance.service.impl.AttendanceService;
 import com.system.attendance.service.impl.UserService;
@@ -26,7 +27,6 @@ public class AttendanceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AttendanceController.class);
 
-
     @Autowired
     private AttendanceService attendanceService;
     @Autowired
@@ -44,7 +44,7 @@ public class AttendanceController {
         return attendanceService.getTodayAttend(TimeUtil.todayStringTime());
     }
 
-    //通过姓名，部门，考勤日期模糊查询考勤信息
+    //管理员通过姓名，部门，考勤日期模糊查询考勤信息
     @RequestMapping("query")
     public List<Attendance> queryAttend(@RequestBody JSONObject json){
         HashMap<String,Object> maps = new HashMap<String,Object>();
@@ -82,13 +82,13 @@ public class AttendanceController {
         String status;
         String userId = null;
         String token = null;
-        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
-            userId = json.getString("user_id");
-        }
         if(json.has("token")&&!(("").equals(json.getString("token")))){
             token = json.getString("token");
             //检查token
             JWTUtil.checkToken(token);
+        }
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
         }
         String userName;
         String dept;
@@ -163,6 +163,22 @@ public class AttendanceController {
                     }else{
                         LOG.info(userName+"----用户签退失败，请重新签退----");
                         status = "out_false";
+                    }
+                }else if(TimeUtil.checkSignOutStatus(signOutTime)&& not == 1 ){
+                    //正常签到之后，早退了，此时考勤会进异常表，但是
+                    //如果在正常签退时间再次签退，需要将异常考勤的记录转移到正常考勤
+                    AttendanceErr attendanceErr = attendanceService.userNoToYes(userId, time);
+                    attendanceErr.setAttendanceStatus("1");
+                    attendanceErr.setSignOutTime(signOutTime);
+                    int i = attendanceService.insertErrToRight(attendanceErr);
+                    String attendanceId = attendanceErr.getAttendanceId();
+                    attendanceService.deleteRightErr(attendanceId);
+                    if(i == 1){
+                        LOG.info(userName+"----用户签退成功----"+signOutTime);
+                        status =  "out_true";
+                    }else{
+                        status = "out_false";
+                        LOG.info(userName+"----用户签退失败，请重新签退----");
                     }
                 }else{
                     //签到为迟到或早退

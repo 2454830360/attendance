@@ -13,10 +13,10 @@ public class UUIDUtil {
     private static final Logger LOG = LoggerFactory.getLogger(UUIDUtil.class);
 
     public static void main(String[] args){
-        System.out.println("用户id："+createUserId());
-        System.out.println("考勤id："+createAttendanceId());
-        System.out.println("请假id："+createLeaveWorkId());
-        System.out.println("出差id："+createOutWorkId());
+//        System.out.println("用户id："+createUserId());
+//        System.out.println("考勤id："+createAttendanceId());
+//        System.out.println("请假id："+createLeaveWorkId());
+//        System.out.println("出差id："+createOutWorkId());
     }
 
     /**

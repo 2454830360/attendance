@@ -8,12 +8,12 @@ import java.util.Date;
 public class TimeUtil {
 
     public static void main(String[] args){
-        System.out.println(todayStringTime());
-        System.out.println(userSignTime());
-        System.out.println(createTime());
-        System.out.println(getWeek());
-        System.out.println(checkSignInStatus("00:59:59"));
-        System.out.println(checkSignOutStatus("17:59:59"));
+//        System.out.println(todayStringTime());
+//        System.out.println(userSignTime());
+//        System.out.println(createTime());
+//        System.out.println(getWeek());
+//        System.out.println(checkSignInStatus("00:59:59"));
+//        System.out.println(checkSignOutStatus("17:59:59"));
 
 
     }
@@ -107,7 +107,6 @@ public class TimeUtil {
         if(now == beginTime || now == endTime){
             return true;
         }
-
 
         Calendar begin = Calendar.getInstance();
         begin.setTime(beginTime);

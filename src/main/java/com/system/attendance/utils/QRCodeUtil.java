@@ -37,16 +37,15 @@ public final class QRCodeUtil {
 
         System.out.println(parent);
         System.out.println(paths);
-
-//        getQRCode();
+        //getQRCode();
     }
-
+    //生成二维码
     public static String getQRCode(){
         try {
             String content = JWTUtil.getToken();
             File paths = new File(ResourceUtils.getURL("classpath:").getPath());
             String path = paths.getParentFile().getParentFile().getParent()+File.separator+"qrCode"+File.separator;
-            path = path.substring(5);
+            path = path.substring(5);//部署到服务器需要将前面5位字符去除
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
             Map hints = new HashMap();
@@ -55,7 +54,7 @@ public final class QRCodeUtil {
             File file = new File(path,"test.jpg");
             QRCodeUtil.writeToFile(bitMatrix, "jpg", file);
             System.out.println("生成二维码----"+file.getPath());
-            return file.getPath();
+            return file.getPath();//返回二维码在服务器的路径，前台通过该路径显示图片
         } catch (Exception e) {
             e.printStackTrace();
         }

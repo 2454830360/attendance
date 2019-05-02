@@ -18,7 +18,6 @@ public class JWTUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(JWTUtil.class);
 
-
     final static String base64EncodedSecretKey = "hello6341532";//私钥
 
     final static long TOKEN_EXP = 1000 * 60 * 60 * 24;//一天

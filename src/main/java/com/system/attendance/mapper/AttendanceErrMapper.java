@@ -11,6 +11,8 @@ public interface AttendanceErrMapper {
 
     int selectErrCount();
 
+    AttendanceErr selectERRByUserIdTime(@Param("userId") String userId,@Param("time") String time);
+
     //获取所有异常考勤信息
     List<AttendanceErr> selectAll();
 

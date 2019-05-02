@@ -124,7 +124,7 @@ public class ToDoController {
         return leaveWorkService.getNoApplyLeave();
     }
 
-    //未审批会议室申请
+    //获取未审批会议室申请
     @RequestMapping("noAuditRoom")
     public List<MeetingRoomUse> getMeetingRoom(){
         return meetRoomService.getNoApplyRoom();
@@ -164,7 +164,6 @@ public class ToDoController {
         }
         return meetRoomService.getNoApplyRoom();
     }
-
 
 
 }

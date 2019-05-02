@@ -163,6 +163,12 @@ public class AttendanceService implements IAttendanceService {
         return attendanceMapper.selectByUserIdTime(userId,time);
     }
 
+    //用户早退后再正常签退时间签退，考勤状态改为正常
+    @Override
+    public AttendanceErr userNoToYes(String userId, String time) {
+        return attendanceErrMapper.selectERRByUserIdTime(userId,time);
+    }
+
     //获取团队成员考勤情况
     @Override
     public List<Attendance> getAttendByDept(String dept,String time) {

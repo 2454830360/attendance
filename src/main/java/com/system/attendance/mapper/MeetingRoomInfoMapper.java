@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface MeetingRoomInfoMapper {
 
+    List<MeetingRoomInfo> getId();
+
     int checkRoomById(String roomId);
 
     List<MeetingRoomInfo> selectAll();

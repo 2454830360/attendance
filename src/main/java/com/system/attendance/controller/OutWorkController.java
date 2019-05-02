@@ -4,6 +4,7 @@ import com.system.attendance.model.OutWork;
 import com.system.attendance.model.User;
 import com.system.attendance.service.impl.OutWorkService;
 import com.system.attendance.service.impl.UserService;
+import com.system.attendance.utils.TimeUtil;
 import com.system.attendance.utils.UUIDUtil;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -119,9 +120,25 @@ public class OutWorkController {
     }
 
 
-    //用户查询自己出差记录
-    @RequestMapping("userQuery")
-    public List<OutWork> userQueryOutWork(@RequestBody JSONObject json){
+    //用户进行中的出差任务
+    @RequestMapping("userOutIng")
+    public List<OutWork> userQueryOutIng(@RequestBody JSONObject json){
+        String userId = null;
+        String time = TimeUtil.todayStringTime();
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(userId != null){
+            return outWorkService.queryOutingByUserId(userId,time);
+        }else{
+            LOG.info("用户查询出差记录出错！userId为空");
+            return null;
+        }
+    }
+
+    //用户已完成的出差任务
+    @RequestMapping("userOutEnd")
+    public List<OutWork> userQueryOutEnd(@RequestBody JSONObject json){
         String userId = null;
 
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){

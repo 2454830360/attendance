@@ -93,6 +93,11 @@ public class AttendanceService implements IAttendanceService {
     public int updateStatus(String attendId) {
         return attendanceMapper.updateStatus(attendId);
     }
+    //如果管理员审批为同意，则将正常表状态改为1
+    @Override
+    public int updateStatusDis(String attendId) {
+        return attendanceMapper.updateStatusDis(attendId);
+    }
 
     //通过姓名，部门，考勤时间查询考勤信息
     @Override

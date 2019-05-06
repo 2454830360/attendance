@@ -30,7 +30,7 @@
     and time = #{time,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select * from attendance_err where attendance_status='0' ORDER BY sign_in_time desc;
+    select * from attendance_err where attendance_status='0' ORDER BY time DESC,sign_in_time DESC;
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 

@@ -19,6 +19,7 @@ public interface IAttendanceService {
     int deleteRightErr(String attendId);
     int deleteErrRight(String userId,String time);
     int updateStatus(String attendId);
+    int updateStatusDis(String attendId);
     List<Attendance> queryByLike(HashMap<String,Object> map);
     List<Attendance> userQueryByLike(HashMap<String,Object> map);
     List<Attendance> getAttendById(String userId);

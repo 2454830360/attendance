@@ -56,10 +56,10 @@
       where use_room_id = #{useRoomId,jdbcType=VARCHAR};
   </update>
   <select id="getNoApply" resultMap="BaseResultMap">
-    select * from meeting_room_use where room_status = '0' ORDER BY room_begin_time DESC;
+    select * from meeting_room_use where room_status = '0' ORDER BY time DESC,room_begin_time DESC;
   </select>
   <select id="getApply" resultMap="BaseResultMap">
-    select * from meeting_room_use where room_status != '0' ORDER BY room_begin_time DESC;
+    select * from meeting_room_use where room_status != '0' ORDER BY time DESC,room_begin_time DESC;
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 

@@ -62,10 +62,15 @@ public class ToDoController {
             int i = attendanceService.insertErrToRight(errAttendById);
             if (i == 1){
                 LOG.info("异常表进入正常表成功");
-                if (attendance_status != null){
+                if (("1").equals(attendance_status)){
                     int k = attendanceService.updateStatus(attendanceId);
                     if (k == 1){
-                        LOG.info("管理员审批为同意，status为1");
+                        LOG.info("管理员异常考勤审批为同意，status为："+attendance_status);
+                    }
+                }else{
+                    int k = attendanceService.updateStatusDis(attendanceId);
+                    if (k == 1){
+                        LOG.info("管理员异常考勤审批为不同意，status为："+attendance_status);
                     }
                 }
                 int j = attendanceService.deleteRightErr(attendanceId);

@@ -62,5 +62,7 @@ public interface AttendanceMapper {
 
     int updateStatus(@Param("attendanceId") String attendanceId);
 
+    int updateStatusDis(@Param("attendanceId") String attendanceId);
+
     int updateRemark(@Param("attendanceId") String attendanceId,@Param("attendanceRemarks") String attendanceRemarks);
 }

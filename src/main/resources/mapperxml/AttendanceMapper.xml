@@ -43,7 +43,7 @@
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
       select * from attendance
       where user_id = #{userId,jdbcType=VARCHAR}
-      ORDER BY sign_in_time desc
+      ORDER BY time DESC,sign_in_time DESC
   </select>
   <select id="selectByLike" resultMap="BaseResultMap" parameterType="java.util.HashMap">
     select * from attendance
@@ -88,7 +88,7 @@
       where attendance_id = #{attendanceId,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select * from attendance ORDER BY sign_in_time desc;
+    select * from attendance ORDER BY time DESC,sign_in_time DESC;
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -340,6 +340,11 @@
   </update>
   <update id="updateStatus" parameterType="java.lang.String">
       update attendance set attendance_status = '1'
+      where attendance_id = #{attendanceId,jdbcType=VARCHAR};
+  </update>
+
+    <update id="updateStatusDis" parameterType="java.lang.String">
+      update attendance set attendance_status = 'n'
       where attendance_id = #{attendanceId,jdbcType=VARCHAR};
   </update>
   <update id="updateRemark" parameterType="java.lang.String">

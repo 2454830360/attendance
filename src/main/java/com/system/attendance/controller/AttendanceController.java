@@ -139,7 +139,7 @@ public class AttendanceController {
                     }
                 }else{
                     //异常签到
-                    attendanceStatus = "";
+                    attendanceStatus = "0";
                     attendance.setAttendanceStatus(attendanceStatus);
                     int j = attendanceService.userSignInERR(attendance);
                     if(j == 1){
@@ -181,12 +181,12 @@ public class AttendanceController {
                         LOG.info(userName+"----用户签退失败，请重新签退----");
                     }
                 }else{
-                    //签到为迟到或早退
+                    //签到为迟到 或 早退
                     int k;
                     if(yes == 1){
                         //正常签到的情况早退
                         Attendance attendances = attendanceService.userYesToNo(userId, time);
-                        attendances.setAttendanceStatus(null);
+                        attendances.setAttendanceStatus("0");
                         attendances.setSignOutTime(signOutTime);
                         k = attendanceService.userSignInERR(attendances);
                         attendanceService.deleteErrRight(userId, time);

@@ -64,7 +64,7 @@ public class CORSConfiguration {
                 //注意拦截器的顺序
                 //添加拦截器，放行不需要校验token的路由,现在放行了二维码，登录，测试，导入导出的
                 registry.addInterceptor(new JwtInterceptor())
-                        .excludePathPatterns("/qrCode/**","/login/**","/test/**","/error/**","/excel_out/**","/excel_in/**")
+                        .excludePathPatterns("/qrCode/**","/login/**","/test/**","/error/**","/excel_out/**","/excel_in/**","/attend/excel")
                         .addPathPatterns("/**");
                 //在拦截器打印访问URL
                 registry.addInterceptor(new HandlerInterceptor() {

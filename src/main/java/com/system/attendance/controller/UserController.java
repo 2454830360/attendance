@@ -164,18 +164,61 @@ public class UserController {
     //通过id查询一个用户的信息
     @RequestMapping("getOne")
     public User getOneUser(@RequestBody JSONObject json){
-        String user_id = null;
+        String userId = null;
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
-            user_id = json.getString("user_id");
+            userId = json.getString("user_id");
         }
-        if(user_id != null ){
-            User userById = userService.getOneUserById(user_id);
-            System.out.println(userById.toString());
+        if(userId != null ){
+            User userById = userService.getOneUserById(userId);
             return userById;
         }else{
             LOG.info("user_id为空");
             return null;
         }
+    }
+    //用户修改密码
+    @RequestMapping("updatePassword")
+    public String modifyUserPass(@RequestBody JSONObject json){
+        String status;
+        String userId = null;
+        String oldUserPassword = null;
+        String newUserPassword = null;
+        User user;
+
+        if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
+            userId = json.getString("user_id");
+        }
+        if(json.has("old_password")&&!(("").equals(json.getString("old_password")))){
+            oldUserPassword = json.getString("old_password");
+        }
+        if(json.has("new_password")&&!(("").equals(json.getString("new_password")))){
+            newUserPassword = json.getString("new_password");
+        }
+        int i = userService.selectByUserId(userId);
+        if(i == 1){
+            String passwordFromDB = userService.verifyUserByPassword(userId);
+            if(passwordFromDB.equals(oldUserPassword)){
+                //密码正确，可修改密码
+                user = new User();
+                user.setUserId(userId);
+                user.setUserPassword(newUserPassword);
+                int j = userService.updateUser(user);
+                if(j == 1){
+                    LOG.info(userId+"----修改密码成功");
+                    status = "true";
+                }else{
+                    LOG.info("修改密码失败");
+                    status = "err";
+                }
+            }else{
+                LOG.info("密码错误");
+                status = "password_err";
+            }
+        }else{
+            LOG.info("用户不存在");
+            status = "user_err";
+        }
+        return status;
     }
 
 

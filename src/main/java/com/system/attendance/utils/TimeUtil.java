@@ -8,13 +8,12 @@ import java.util.Date;
 public class TimeUtil {
 
     public static void main(String[] args){
-//        System.out.println(todayStringTime());
-//        System.out.println(userSignTime());
-//        System.out.println(createTime());
-//        System.out.println(getWeek());
-//        System.out.println(checkSignInStatus("00:59:59"));
-//        System.out.println(checkSignOutStatus("17:59:59"));
-
+        System.out.println(todayStringTime());
+        System.out.println(userSignTime());
+        System.out.println(createTime());
+        System.out.println(getWeek());
+        System.out.println(checkSignInStatus("00:59:59"));
+        System.out.println(checkSignOutStatus("17:59:59"));
 
     }
 
@@ -29,6 +28,11 @@ public class TimeUtil {
     }
     public static String todayStringTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date now = new Date();
+        return sdf.format(now);
+    }
+    public static String getMonth(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         Date now = new Date();
         return sdf.format(now);
     }
@@ -50,10 +54,10 @@ public class TimeUtil {
         return sdf.format(now);
     }
     //星期几
-    public static Integer getWeek(){
-        SimpleDateFormat sdf = new SimpleDateFormat("F");
+    public static String getWeek(){
+        SimpleDateFormat sdf = new SimpleDateFormat("E");
         Date now = new Date();
-        return Integer.valueOf(sdf.format(now))-1;
+        return sdf.format(now);
     }
     //判断签到时间是否正常
     public static boolean checkSignInStatus(String signInTime){

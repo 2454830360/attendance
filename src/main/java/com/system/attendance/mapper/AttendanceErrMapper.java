@@ -9,6 +9,10 @@ import java.util.List;
 @Mapper
 public interface AttendanceErrMapper {
 
+    int countById(@Param("attendanceId") String attendanceId);
+
+    int updateRemark(@Param("attendanceId") String attendanceId,@Param("attendanceRemarks") String attendanceRemarks);
+
     int selectErrCount();
 
     AttendanceErr selectERRByUserIdTime(@Param("userId") String userId,@Param("time") String time);

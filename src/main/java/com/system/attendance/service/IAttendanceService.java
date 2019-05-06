@@ -24,6 +24,7 @@ public interface IAttendanceService {
     List<Attendance> userQueryByLike(HashMap<String,Object> map);
     List<Attendance> getAttendById(String userId);
     int countAttendById(String attendId);
+    int countAttendERRById(String attendId);
     int userSayWhyErr(String attendId,String remarks);
     int userSignStatus(String userId,String time);
     int userSignStatusErr(String userId,String time);

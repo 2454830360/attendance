@@ -11,6 +11,8 @@ import java.util.List;
 @Mapper
 public interface AttendanceMapper {
 
+    List<Attendance> getMonth(@Param("time") String time);
+
     List<Attendance> queryTeamAttend(@Param("dept") String dept,@Param("time") String time);
 
     int userEarlyOut(@Param("userId")String userId,@Param("time") String time);

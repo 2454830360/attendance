@@ -19,6 +19,16 @@
     attendance_id, user_id, user_name, dept, sign_in_time, sign_out_time, attendance_status, 
     attendance_type, is_overtime, overtime_time, attendance_remarks, time
   </sql>
+  <select id="countById" resultType="java.lang.Integer" parameterType="java.lang.String">
+      select count(*) from attendance_err
+      where attendance_id = #{attendanceId,jdbcType=VARCHAR}
+  </select>
+  <update id="updateRemark" parameterType="java.lang.String">
+      update attendance_err set
+      attendance_status = '0',
+      attendance_remarks = #{attendanceRemarks,jdbcType=VARCHAR}
+      where attendance_id = #{attendanceId,jdbcType=VARCHAR};
+  </update>
   <select id="selectErrCount" resultType="java.lang.Integer">
     select count(*) from attendance_err;
   </select>

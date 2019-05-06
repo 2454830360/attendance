@@ -122,11 +122,15 @@ public class AttendanceService implements IAttendanceService {
     public int countAttendById(String attendId) {
         return attendanceMapper.countById(attendId);
     }
+    @Override
+    public int countAttendERRById(String attendId) {
+        return attendanceErrMapper.countById(attendId);
+    }
 
     //用户提交异常考勤原因
     @Override
     public int userSayWhyErr(String attendId,String remarks) {
-        return attendanceMapper.updateRemark(attendId,remarks);
+        return attendanceErrMapper.updateRemark(attendId,remarks);
     }
 
     //用户签到状态

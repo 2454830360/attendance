@@ -3,21 +3,23 @@ package com.system.attendance.controller;
 import com.system.attendance.model.Attendance;
 import com.system.attendance.model.AttendanceErr;
 import com.system.attendance.model.User;
+import com.system.attendance.service.impl.AttendExcelService;
 import com.system.attendance.service.impl.AttendanceService;
 import com.system.attendance.service.impl.UserService;
 import com.system.attendance.utils.JWTUtil;
 import com.system.attendance.utils.TimeUtil;
 import com.system.attendance.utils.UUIDUtil;
-import io.jsonwebtoken.Claims;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +32,10 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
     @Autowired
+    private AttendExcelService attendExcelService;
+    @Autowired
     private UserService userService;
+
 
     //获取所有正常考勤信息
     @RequestMapping("getAll")
@@ -42,6 +47,11 @@ public class AttendanceController {
     @RequestMapping("getToday")
     public List<Attendance> getTodayAttend(){
         return attendanceService.getTodayAttend(TimeUtil.todayStringTime());
+    }
+    //导出考勤信息
+    @GetMapping(value = "excel",produces = "application/json")
+    public String attendExport(HttpServletResponse response,@RequestBody(required = false) JSONObject json) throws Exception {
+        return attendExcelService.exportAttendFromDB(response);
     }
 
     //管理员通过姓名，部门，考勤日期模糊查询考勤信息
@@ -110,12 +120,10 @@ public class AttendanceController {
                 String signInTime = TimeUtil.userSignTime();
                 String attendanceStatus;
                 String attendanceType;
-                if(TimeUtil.getWeek() >=1 && TimeUtil.getWeek() <=5){
-                    //工作日考勤
-                    attendanceType = "工作日考勤";
-                }else{
-                    //周末考勤
+                if(TimeUtil.getWeek().equals("星期六")||TimeUtil.getWeek().equals("星期日")){
                     attendanceType = "周末考勤";
+                }else{
+                    attendanceType = "工作日考勤";
                 }
                 attendance.setAttendanceId(attendanceId);
                 attendance.setUserId(userId);
@@ -268,7 +276,7 @@ public class AttendanceController {
             attendanceRemark = json.getString("attendance_remarks");
         }
         if(attendanceId != null && attendanceRemark != null){
-            int i = attendanceService.countAttendById(attendanceId);
+            int i = attendanceService.countAttendERRById(attendanceId);
             if(i == 1){
                 int j = attendanceService.userSayWhyErr(attendanceId, attendanceRemark);
                 if(j == 1){

@@ -40,21 +40,14 @@ public class JWTUtil {
                             .setSigningKey(base64EncodedSecretKey)
                             .parseClaimsJws(token)
                             .getBody();
-//            System.out.println("jwt body----"+claims);
             return claims;
         }catch (ExpiredJwtException e1){
-            LOG.info("登录信息过期，请重新登录");
+            LOG.info("token过期，请重新生成");
         }catch (Exception e){
-            LOG.info("该用户未登录，请重新登录");
+            LOG.info("token无效，请重新生成");
         }
         return null;
     }
 
-
-
-    //解token
-    public static void parseToken(String token){
-
-    }
 
 }

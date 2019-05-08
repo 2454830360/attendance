@@ -4,6 +4,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
@@ -20,6 +22,8 @@ public final class QRCodeUtil {
 
     private static final int BLACK = 0xFF000000;
     private static final int WHITE = 0xFFFFFFFF;
+    private static final Logger LOG = LoggerFactory.getLogger(QRCodeUtil.class);
+
 
 //    @Value("${image.path}")
 //    private static String path;
@@ -53,7 +57,7 @@ public final class QRCodeUtil {
             BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 400, 400,hints);
             File file = new File(path,"test.jpg");
             QRCodeUtil.writeToFile(bitMatrix, "jpg", file);
-            System.out.println("生成二维码----"+file.getPath());
+            LOG.info("生成二维码----"+file.getPath());
             return file.getPath();//返回二维码在服务器的路径，前台通过该路径显示图片
         } catch (Exception e) {
             e.printStackTrace();

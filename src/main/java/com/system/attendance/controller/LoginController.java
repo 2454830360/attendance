@@ -1,11 +1,8 @@
 package com.system.attendance.controller;
 
-import com.system.attendance.model.Admin;
-import com.system.attendance.model.User;
 import com.system.attendance.service.impl.AdminService;
 import com.system.attendance.service.impl.UserService;
 import com.system.attendance.utils.JWTUtil;
-import com.system.attendance.websocket.WebSocketServer;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +91,7 @@ public class LoginController {
                     status = "true";
                     token = "tokens:"+JWTUtil.getToken();
                     LOG.info("管理员登录成功，adminId----"+adminId);
-                    LOG.info("管理员登录生成的token----"+token);
+//                    LOG.info("管理员登录生成的token----"+token);
                 }else{
                     LOG.info("密码错误，adminId----"+adminId);
                     status = "password_error";

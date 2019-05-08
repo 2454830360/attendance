@@ -55,7 +55,9 @@ public class WebSocketServer {
     public void onClose() throws IOException {
         //设置只能有一个用户连接，后续增加用户再说吧
         if(getOnlineCount() == 1){
-            this.session.close();
+            if(this.session.isOpen()){
+                this.session.close();
+            }
             threads.stop();
             webSocketSet.remove(this);  //从set中删除
             subOnlineCount();           //在线数减1
@@ -86,8 +88,8 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        LOG.error("webSocket发生错误");
-        error.printStackTrace();
+        LOG.error("webSocket发生点小问题，请重新连接");
+//        error.printStackTrace();
     }
 
     /**

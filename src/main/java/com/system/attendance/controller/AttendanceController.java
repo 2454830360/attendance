@@ -94,9 +94,9 @@ public class AttendanceController {
         String token = null;
         if(json.has("token")&&!(("").equals(json.getString("token")))){
             token = json.getString("token");
-            //检查token
-            JWTUtil.checkToken(token);
         }
+        //检查token
+        JWTUtil.checkToken(token.substring(7));
         if(json.has("user_id")&&!(("").equals(json.getString("user_id")))){
             userId = json.getString("user_id");
         }

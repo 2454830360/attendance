@@ -26,7 +26,7 @@ public class QRCodeController {
         return bytes;
     }
 
-    @RequestMapping(value = "/gets",produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping(value = "/testGet",produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public BufferedImage getImages() throws IOException {
         return ImageIO.read(new FileInputStream(new File(QRCodeUtil.getQRCode())));

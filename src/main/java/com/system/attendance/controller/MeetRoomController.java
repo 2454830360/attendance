@@ -38,6 +38,7 @@ public class MeetRoomController {
         return meetRoomService.getAllRoom();
     }
 
+    //新增会议室
     @RequestMapping("addOne")
     public List<MeetingRoomInfo> addRoom(@RequestBody JSONObject json){
         MeetingRoomInfo meetingRoomInfo = new MeetingRoomInfo();

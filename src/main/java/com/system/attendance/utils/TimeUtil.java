@@ -68,7 +68,7 @@ public class TimeUtil {
         try {
             //签到时间
             beginTime = sdf.parse("00:00:00");
-            endTime = sdf.parse("23:00:00");
+            endTime = sdf.parse("23:59:59");
             now = sdf.parse(signInTime);
         } catch (ParseException e) {
             e.printStackTrace();

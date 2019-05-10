@@ -16,6 +16,8 @@ public class MyThread implements Runnable{
     private static final Logger LOG = LoggerFactory.getLogger(MyThread.class);
 
     private int sum; //原始条数
+    private String sign_out_time;//原始签到时间
+    private String new_out_time;//轮询搜索数据库条数
     private int new_sum; //轮询搜索数据库条数
     private boolean stop = true;
     public void stop(){

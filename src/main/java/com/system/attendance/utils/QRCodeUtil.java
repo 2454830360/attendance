@@ -49,7 +49,7 @@ public final class QRCodeUtil {
             String content = JWTUtil.getToken();
             File paths = new File(ResourceUtils.getURL("classpath:").getPath());
             String path = paths.getParentFile().getParentFile().getParent()+File.separator+"qrCode"+File.separator;
-            path = path.substring(5);//部署到服务器需要将前面5位字符去除
+//            path = path.substring(5);//部署到服务器需要将前面5位字符去除
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
             Map hints = new HashMap();

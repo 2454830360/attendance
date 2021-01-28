@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBUtil {
-    private static final String URL = "jdbc:mysql://134.175.84.55:3306/attendance_system?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true";
+    private static final String URL = "jdbc:mysql://localhost:3306/attendance_system?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true";
     private static final String USER = "root";
-    private static final String PASSWORD = "root1234";
+    private static final String PASSWORD = "root";
     private static Connection conn=null;
 
     static {
@@ -60,7 +60,8 @@ public class DBUtil {
     public static List<Attendance> getTodayAttend(){
         List<Attendance> todayAttend = new ArrayList<Attendance>();
         String now_time = TimeUtil.todayStringTime();
-        String sql = "select * from attendance where time = "+now_time+" ORDER BY sign_in_time desc";
+//        String sql = "select * from attendance where time = "+now_time+" ORDER BY sign_in_time desc";
+        String sql = "select * from attendance ORDER BY sign_in_time desc";
         ResultSet rs;
         PreparedStatement ps;
         try {
@@ -91,6 +92,11 @@ public class DBUtil {
                 e.printStackTrace();
             }
         return todayAttend;
+    }
+
+    public static void main(String[] args) {
+        List<Attendance> todayAttend = getTodayAttend();
+        System.out.println(todayAttend);
     }
 
 }
